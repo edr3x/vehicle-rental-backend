@@ -1,6 +1,4 @@
-# TS express starter
-
-Express.js server starter with TypeScript
+# Vechcle Rental Platform
 
 ## File Structure
 ```
