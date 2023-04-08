@@ -1,31 +1,19 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 
-import { verifyPhone } from "../services/auth.service";
+import { sendVerificationCode } from "../services/auth.service";
 
-import { failureResponse, successResponse } from "../utils/response";
-
-// import { sendVerification } from "../utils/sms";
-
-export async function verifyPhoneController(req: Request, res: Response) {
+export async function verifyPhoneController(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+) {
     try {
         const number = parseInt(req.params.number, 10);
 
-        const phoneNumber = await verifyPhone(number);
+        const phone = await sendVerificationCode(number);
 
-        if (phoneNumber) {
-            return res
-                .status(200)
-                .json(successResponse("Phone Number Verified"));
-        }
-
-        const message: string = "message for testing purpose";
-
-        // const send_code = await sendVerification(number, message);
-
-        return res
-            .status(200)
-            .json(successResponse("Sent Verification to phone"));
+        return res.status(200).json({ success: true, data: phone });
     } catch (e: any) {
-        return res.status(500).json(failureResponse(e.message));
+        next(e);
     }
 }
