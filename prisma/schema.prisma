@@ -7,7 +7,164 @@ datasource db {
     url      = env("DATABASE_URL")
 }
 
+enum Role {
+    user
+    admin
+}
+
+enum Gender {
+    male
+    female
+    other
+}
+
 model User {
-    id    String @id @default(uuid())
-    phone BigInt @unique
+    id           String    @id @default(uuid())
+    phone        BigInt    @unique
+    fullName     String
+    email        String    @unique
+    role         Role      @default(user)
+    isActive     Boolean   @default(true)
+    gender       Gender
+    profileImage String?
+    createdAt    DateTime  @default(now())
+    updatedAt    DateTime  @updatedAt
+    address      Address?
+    vehicle      Vehicle[]
+    booking      Booking[]
+}
+
+model Address {
+    id              String        @id @default(uuid())
+    province        String
+    district        String
+    municipality    String
+    city            String
+    street          String
+    createdAt       DateTime      @default(now())
+    updatedAt       DateTime      @updatedAt
+    user            User          @relation(fields: [userId], references: [id])
+    userId          String        @unique
+    vehicleDriver   VehicleDriver @relation(fields: [vehicleDriverId], references: [id])
+    vehicleDriverId String        @unique
+}
+
+enum VehicleType {
+    electric
+    petrol
+    diesel
+}
+
+enum DriveTrain {
+    frontWheel
+    rearWheel
+    fourWheel
+    allWheel
+}
+
+model Vehicle {
+    id                  String          @id @default(uuid())
+    addedBy             User            @relation(fields: [addedById], references: [id])
+    addedById           String
+    type                VehicleType
+    category            Category        @relation(fields: [categoryId], references: [id])
+    categoryId          String
+    subCategory         SubCategory     @relation(fields: [subCategoryId], references: [id])
+    subCategoryId       String
+    brand               Brand           @relation(fields: [brandId], references: [id])
+    brandId             String
+    model               String
+    features            VehicleFeature?
+    thumbnail           String
+    images              String[]
+    isBooked            Boolean         @default(false)
+    isVerified          Boolean         @default(false)
+    bluebookPics        String[]
+    vehicleNumber       String
+    description         String
+    rentGuidelines      String
+    rate                String
+    pickupAddress       String
+    driveTrain          DriveTrain
+    insurancePaperPhoto String
+    createdAt           DateTime        @default(now())
+    updatedAt           DateTime        @updatedAt
+    Booking             Booking[]
+}
+
+model Brand {
+    id      String    @id @default(uuid())
+    title   String
+    logo    String
+    Vehicle Vehicle[]
+}
+
+model Category {
+    id          String        @id @default(uuid())
+    title       String
+    logo        String
+    SubCategory SubCategory[]
+    Vehicle     Vehicle[]
+}
+
+model SubCategory {
+    id          String    @id @default(uuid())
+    title       String
+    description String
+    logo        String
+    category    Category  @relation(fields: [categoryId], references: [id])
+    categoryId  String
+    Vehicle     Vehicle[]
+}
+
+enum Transmission {
+    automatic
+    manual
+}
+
+model VehicleFeature {
+    id                String       @id @default(uuid())
+    Vehicle           Vehicle      @relation(fields: [vehicleId], references: [id])
+    vehicleId         String       @unique
+    color             String
+    noOfSeats         Int
+    noOfDoors         Int
+    hasAC             Boolean
+    hasABS            Boolean
+    hasAirbag         Boolean
+    hasSunRoof        Boolean
+    hasPowerSteering  Boolean
+    hasUSBPort        Boolean
+    hasBluetooth      Boolean
+    hasKeylessEntry   Boolean
+    hasHeatedSeats    Boolean
+    hasBackCamera     Boolean
+    hasParkingSensors Boolean
+    hasAutoDrive      Boolean
+    transmission      Transmission
+}
+
+model Booking {
+    id          String   @id @default(uuid())
+    Vehicle     Vehicle  @relation(fields: [vehicleId], references: [id])
+    vehicleId   String
+    startDate   DateTime
+    endDate     DateTime
+    description String
+    bookedBy    User     @relation(fields: [bookedById], references: [id])
+    bookedById  String
+    createdAt   DateTime @default(now())
+    updatedAt   DateTime @updatedAt
+}
+
+model VehicleDriver {
+    id          String   @id @default(uuid())
+    fullName    String
+    phone       BigInt
+    licenseType String
+    licenseNo   String   @unique
+    licensePic  String
+    isVerified  Boolean  @default(false)
+    isAvailable Boolean  @default(true)
+    address     Address?
 }
