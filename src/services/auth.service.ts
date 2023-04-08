@@ -17,7 +17,7 @@ export async function sendVerificationCode(phone: number) {
     const code = verificationCodeGen();
 
     await redis.connect();
-    await redis.setEx(phone.toString(), 240, code.toString());
+    await redis.setEx(phone.toString(), 170, code.toString());
     await redis.disconnect();
 
     // send verificaiton code to user
