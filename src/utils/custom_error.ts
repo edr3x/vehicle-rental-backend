@@ -1,4 +1,5 @@
 import { Response } from "express";
+import { logger } from "./logger";
 
 export class CustomError extends Error {
     statusCode = 500;
@@ -11,5 +12,6 @@ export class CustomError extends Error {
 
 export const handleError = (err: CustomError, res: Response) => {
     const { statusCode, message } = err;
+    logger.error(message);
     res.status(statusCode).json({ success: false, message });
 };

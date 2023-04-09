@@ -19,20 +19,21 @@ enum Gender {
 }
 
 model User {
-    id           String    @id @default(uuid())
-    phone        BigInt    @unique
-    fullName     String?
-    email        String?   @unique
-    role         Role      @default(user)
-    isActive     Boolean   @default(true)
-    isVerified   Boolean   @default(false)
-    gender       Gender?
-    profileImage String?
-    createdAt    DateTime  @default(now())
-    updatedAt    DateTime  @updatedAt
-    address      Address?
-    vehicle      Vehicle[]
-    booking      Booking[]
+    id            String    @id @default(uuid())
+    phone         BigInt    @unique
+    fullName      String?
+    email         String?   @unique
+    role          Role      @default(user)
+    isActive      Boolean   @default(true)
+    phoneVerified Boolean   @default(false)
+    emailVerified Boolean   @default(false)
+    gender        Gender?
+    profileImage  String?
+    createdAt     DateTime  @default(now())
+    updatedAt     DateTime  @updatedAt
+    address       Address?
+    vehicle       Vehicle[]
+    booking       Booking[]
 }
 
 model Otp {

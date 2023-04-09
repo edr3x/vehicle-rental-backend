@@ -37,11 +37,23 @@ export async function verifyOTP(phone: number, otp: number) {
         throw new CustomError(400, "Invalid OTP");
     }
 
-    await prisma.otp.delete({
-        where: {
-            phone,
-        },
-    });
+    const [user, verifyotp] = await prisma.$transaction([
+        prisma.user.create({
+            data: {
+                phone,
+                phoneVerified: true,
+            },
+        }),
+        prisma.otp.delete({
+            where: {
+                phone,
+            },
+        }),
+    ]);
+
+    if (!user || !verifyotp) {
+        throw new CustomError(500, "Unexpected Server ERROR");
+    }
 
     return "verified successfully";
 }

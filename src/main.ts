@@ -9,8 +9,6 @@ import {
     customErrorHandler,
 } from "./middlewares/error_handlers.middleware";
 
-import { logger } from "./utils/logger";
-
 const app = express();
 
 // middlewares
@@ -20,5 +18,4 @@ app.use("/api/v1", router);
 app.use(customErrorHandler);
 app.use(notFound);
 
-const port = config.PORT;
-app.listen(port, () => logger.info(`listening in port:${port}`));
+app.listen(config.PORT, () => console.log(`listening in port:${config.PORT}`));
