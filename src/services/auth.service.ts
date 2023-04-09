@@ -1,28 +1,25 @@
 import { prisma } from "../utils/db";
-import { verificationCodeGen } from "../utils/codegen";
-import { CreateUserSchema } from "../schemas/auth.schema";
-import { CustomError } from "../utils/custom_error";
 import { sendSMS } from "../utils/sms";
+import { CustomError } from "../utils/custom_error";
+import { verificationCodeGen } from "../utils/codegen";
+
+import { CreateUserSchema } from "../schemas/auth.schema";
 
 export async function sendOTP(phone: number) {
-    try {
-        const code = verificationCodeGen();
+    const code = verificationCodeGen();
 
-        await prisma.otp.create({
-            data: {
-                phone,
-                otp: code,
-            },
-        });
+    await prisma.otp.create({
+        data: {
+            phone,
+            otp: code,
+        },
+    });
 
-        const message: string = `Your verification code is ${code}.`;
+    // const message: string = `Your verification code is ${code}.`;
 
-        await sendSMS(phone, message);
+    // await sendSMS(phone, message);
 
-        return "Verification code sent to your phone number";
-    } catch (err) {
-        throw new CustomError(500, "Internal server error");
-    }
+    return "Verification code sent to your phone number";
 }
 
 export async function verifyOTP(phone: number, otp: number) {

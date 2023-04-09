@@ -12,14 +12,12 @@ import {
 } from "../schemas/auth.schema";
 
 export async function sendOTPController(
-    req: Request<SendOTPSchema>,
+    req: Request<{}, {}, SendOTPSchema>,
     res: Response,
     next: NextFunction,
 ) {
     try {
-        const { phone } = req.params;
-
-        const response = await sendOTP(parseInt(phone, 10));
+        const response = await sendOTP(req.body.phone);
 
         return res.status(201).json({ success: true, data: response });
     } catch (e: any) {
@@ -28,17 +26,14 @@ export async function sendOTPController(
 }
 
 export async function verifyOTPController(
-    req: Request<VerifyOTPSchema>,
+    req: Request<{}, {}, VerifyOTPSchema>,
     res: Response,
     next: NextFunction,
 ) {
     try {
-        const { phone, code } = req.params;
+        const { phone, code } = req.body;
 
-        const response = await verifyOTP(
-            parseInt(phone, 10),
-            parseInt(code, 10),
-        );
+        const response = await verifyOTP(phone, code);
 
         return res.status(201).json({ success: true, data: response });
     } catch (e: any) {

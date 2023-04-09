@@ -10,14 +10,14 @@ import {
 
 const router = Router();
 
-router.get(
-    "/sendotp/:phone",
+router.post(
+    "/sendotp",
     verifyInput(sendOTPSchema),
     AuthController.sendOTPController,
 );
 
-router.get(
-    "/verifyotp/:phone/:code",
+router.post(
+    "/verifyotp",
     verifyInput(verifyOTPSchema),
     AuthController.verifyOTPController,
 );

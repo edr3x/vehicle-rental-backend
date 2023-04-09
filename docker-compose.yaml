@@ -12,17 +12,6 @@ services:
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_DB=${POSTGRES_DB}
 
-  redis:
-    image: redis
-    restart: always
-    ports:
-      - '6379:6379'
-    command: redis-server --save 60 1 --loglevel warning
-    volumes: 
-      - redis:/data
-
 volumes:
   postgres:
     name: vehicle-data-volume
-  redis:
-    name: redis-cache
