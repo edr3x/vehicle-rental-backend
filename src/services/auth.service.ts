@@ -59,39 +59,44 @@ export async function verifyOTP(phone: number, otp: number) {
 }
 
 export async function createUserService(userDetails: CreateUserSchema) {
-    // TODO:: all this chunk
+    const { fullName, gender, email, phone } = userDetails;
 
-    // const { fullName, gender, email, phone } = userDetails;
+    const checkUser = await prisma.user.findUnique({
+        where: {
+            phone,
+        },
+    });
 
-    // const checkUser = await prisma.user.findUnique({
-    //     where: {
-    //         phone,
-    //     },
-    // });
+    if (!checkUser) {
+        throw new CustomError(404, "User Not Found");
+    }
 
-    // if (checkUser) {
-    //     throw new CustomError(400, "User already exists login instead");
-    // }
+    if (checkUser.email) {
+        throw new CustomError(400, "User already exists login insted");
+    }
 
-    // const [user, verifyotp] = await prisma.$transaction([
-    //     prisma.user.create({
-    //         data: {
-    //             fullName,
-    //             gender,
-    //             email,
-    //             phone,
-    //         },
-    //     }),
+    if (!checkUser.phoneVerified) {
+        throw new CustomError(
+            400,
+            "User phone number not verified, Verify first",
+        );
+    }
 
-    //     prisma.otp.create({
-    //         data: {
-    //             phone,
-    //             otp: code,
-    //         },
-    //     }),
-    // ]);
+    const user = await prisma.user.update({
+        where: {
+            phone,
+        },
+        data: {
+            fullName,
+            gender,
+            email,
+        },
+    });
 
-    // // Number(user.phoneNo.toString()) //note: changing BigInt to Number
-
-    return "Verification code sent to your phone number";
+    return {
+        email: user.email,
+        phone: user.phone ? Number(user.phone.toString()) : null,
+        fullName: user.fullName,
+        gender: user.gender,
+    };
 }

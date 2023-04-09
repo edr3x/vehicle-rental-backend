@@ -40,10 +40,12 @@ export const createUserSchema = z.object({
             required_error: "Full Name is required",
         }),
 
-        email: z.string({
-            required_error: "Email is required",
-            invalid_type_error: "Author name must be a string",
-        }),
+        email: z
+            .string({
+                required_error: "Email is required",
+                invalid_type_error: "Email must be a string",
+            })
+            .email("Not a valid email"),
 
         gender: z.enum(["male", "female", "other"]),
 
