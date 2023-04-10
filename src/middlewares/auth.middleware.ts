@@ -14,6 +14,14 @@ export const isLoggedIn = (req: Request, res: Response, next: NextFunction) => {
 
         res.locals.user = user;
 
+        // note: looks like:
+        // {
+        //   id: '7dda059e-1414-4a70-b44f-94bdb63f5406',
+        //   phone: 9882857162,
+        //   iat: 1681127572,
+        //   exp: 1683719572
+        // }
+
         next();
     } catch (error: any) {
         throw new CustomError(401, "Unauthorized");
