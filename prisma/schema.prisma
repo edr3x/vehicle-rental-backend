@@ -25,6 +25,7 @@ model User {
     email         String?   @unique
     role          Role      @default(user)
     isActive      Boolean   @default(true)
+    isRegistered  Boolean   @default(false)
     phoneVerified Boolean   @default(false)
     emailVerified Boolean   @default(false)
     gender        Gender?

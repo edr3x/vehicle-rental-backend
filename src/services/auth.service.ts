@@ -1,9 +1,35 @@
+import { sign } from "jsonwebtoken";
+
 import { prisma } from "../utils/db";
 import { sendSMS } from "../utils/sms";
 import { CustomError } from "../utils/custom_error";
-import { verificationCodeGen } from "../utils/codegen";
 
 import { CreateUserSchema } from "../schemas/auth.schema";
+import config from "../config/env";
+
+const verificationCodeGen = () => Math.floor(100000 + Math.random() * 900000);
+
+const createToken = ({
+    id,
+    phone,
+    email,
+}: {
+    id: string;
+    phone: number;
+    email: string;
+}) => {
+    return sign(
+        {
+            id,
+            phone,
+            email,
+        },
+        config.JWT_SECRET,
+        {
+            expiresIn: "30d",
+        },
+    );
+};
 
 export async function sendOTP(phone: number) {
     const code = verificationCodeGen();
@@ -37,25 +63,62 @@ export async function verifyOTP(phone: number, otp: number) {
         throw new CustomError(400, "Invalid OTP");
     }
 
-    const [user, verifyotp] = await prisma.$transaction([
-        prisma.user.create({
-            data: {
-                phone,
-                phoneVerified: true,
-            },
-        }),
-        prisma.otp.delete({
-            where: {
-                phone,
-            },
-        }),
-    ]);
+    const user = await prisma.user.findUnique({
+        where: {
+            phone,
+        },
+    });
 
-    if (!user || !verifyotp) {
-        throw new CustomError(500, "Unexpected Server ERROR");
+    if (!user) {
+        const [userdata, verifyotp] = await prisma.$transaction([
+            prisma.user.create({
+                data: {
+                    phone,
+                    phoneVerified: true,
+                },
+            }),
+            prisma.otp.delete({
+                where: {
+                    phone,
+                },
+            }),
+        ]);
+
+        if (!userdata || !verifyotp) {
+            throw new CustomError(500, "Unexpected Server ERROR");
+        }
+
+        return "OTP Verified Successfully, fillup personal details to continue";
     }
 
-    return "verified successfully";
+    if (!user.isRegistered) {
+        throw new CustomError(400, "User not registered");
+    }
+
+    const jwtToken = createToken({
+        id: user.id,
+        phone: Number(user.phone.toString()),
+        email: user.email || "",
+    });
+
+    const userData = {
+        email: user.email,
+        phone: Number(user.phone.toString()),
+        fullName: user.fullName,
+        gender: user.gender,
+    };
+
+    await prisma.otp.delete({
+        where: {
+            phone,
+        },
+    });
+
+    return {
+        user: userData,
+        token: jwtToken,
+        message: "Successfully Logged In",
+    };
 }
 
 export async function createUserService(userDetails: CreateUserSchema) {
@@ -90,6 +153,7 @@ export async function createUserService(userDetails: CreateUserSchema) {
             fullName,
             gender,
             email,
+            isRegistered: true,
         },
     });
 
