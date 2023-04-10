@@ -9,20 +9,11 @@ import config from "../config/env";
 
 const verificationCodeGen = () => Math.floor(100000 + Math.random() * 900000);
 
-const createToken = ({
-    id,
-    phone,
-    email,
-}: {
-    id: string;
-    phone: number;
-    email: string;
-}) => {
+const createToken = ({ id, phone }: { id: string; phone: number }) => {
     return sign(
         {
             id,
             phone,
-            email,
         },
         config.JWT_SECRET,
         {
@@ -88,7 +79,16 @@ export async function verifyOTP(phone: number, otp: number) {
             throw new CustomError(500, "Unexpected Server ERROR");
         }
 
-        return "OTP Verified Successfully, fillup personal details to continue";
+        const jwtToken = createToken({
+            id: userdata.id,
+            phone,
+        });
+
+        return {
+            token: jwtToken,
+            message:
+                "OTP Verified Successfully, fillup personal details to continue",
+        };
     }
 
     if (!user.isRegistered) {
@@ -98,15 +98,7 @@ export async function verifyOTP(phone: number, otp: number) {
     const jwtToken = createToken({
         id: user.id,
         phone: Number(user.phone.toString()),
-        email: user.email || "",
     });
-
-    const userData = {
-        email: user.email,
-        phone: Number(user.phone.toString()),
-        fullName: user.fullName,
-        gender: user.gender,
-    };
 
     await prisma.otp.delete({
         where: {
@@ -115,34 +107,19 @@ export async function verifyOTP(phone: number, otp: number) {
     });
 
     return {
-        user: userData,
         token: jwtToken,
         message: "Successfully Logged In",
     };
 }
 
-export async function createUserService(userDetails: CreateUserSchema) {
+export async function updateUserService(
+    userDetails: CreateUserSchema,
+    localuserdata: any,
+) {
     const { fullName, gender, email, phone } = userDetails;
 
-    const checkUser = await prisma.user.findUnique({
-        where: {
-            phone,
-        },
-    });
-
-    if (!checkUser) {
-        throw new CustomError(404, "User Not Found");
-    }
-
-    if (checkUser.email) {
-        throw new CustomError(400, "User already exists login insted");
-    }
-
-    if (!checkUser.phoneVerified) {
-        throw new CustomError(
-            400,
-            "User phone number not verified, Verify first",
-        );
+    if (localuserdata.phone !== phone) {
+        throw new CustomError(400, "Invalid Phone Number");
     }
 
     const user = await prisma.user.update({

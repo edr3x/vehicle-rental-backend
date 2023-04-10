@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 
 import {
-    createUserService,
+    updateUserService,
     sendOTP,
     verifyOTP,
 } from "../services/auth.service";
@@ -41,13 +41,13 @@ export async function verifyOTPController(
     }
 }
 
-export async function createUserController(
+export async function updateUserController(
     req: Request<{}, {}, CreateUserSchema>,
     res: Response,
     next: NextFunction,
 ) {
     try {
-        const response = await createUserService(req.body);
+        const response = await updateUserService(req.body, res.locals.user);
 
         return res.status(201).json({ success: true, data: response });
     } catch (e: any) {

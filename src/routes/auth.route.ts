@@ -7,6 +7,7 @@ import {
     sendOTPSchema,
     verifyOTPSchema,
 } from "../schemas/auth.schema";
+import { isLoggedIn } from "../middlewares/auth.middleware";
 
 const router = Router();
 
@@ -24,8 +25,9 @@ router.post(
 
 router.post(
     "/register",
+    isLoggedIn,
     verifyInput(createUserSchema),
-    AuthController.createUserController,
+    AuthController.updateUserController,
 );
 
 export default router;
