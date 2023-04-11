@@ -48,11 +48,6 @@ export const createUserSchema = z.object({
             .email("Not a valid email"),
 
         gender: z.enum(["male", "female", "other"]),
-
-        phone: z.number({
-            required_error: "Phone Number is required",
-            invalid_type_error: "Phone Number must be a number",
-        }),
     }),
 });
 

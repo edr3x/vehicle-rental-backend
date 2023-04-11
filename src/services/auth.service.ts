@@ -145,15 +145,11 @@ export async function updateUserService(
     userDetails: CreateUserSchema,
     localuserdata: any,
 ) {
-    const { fullName, gender, email, phone } = userDetails;
-
-    if (localuserdata.phone !== phone) {
-        throw new CustomError(400, "Invalid Phone Number");
-    }
+    const { fullName, gender, email } = userDetails;
 
     const user = await prisma.user.update({
         where: {
-            phone,
+            id: localuserdata.id,
         },
         data: {
             fullName,
