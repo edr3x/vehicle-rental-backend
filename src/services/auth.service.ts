@@ -7,13 +7,22 @@ import { CustomError } from "../utils/custom_error";
 import { CreateUserSchema } from "../schemas/auth.schema";
 import config from "../config/env";
 
+type TokenParams = {
+    id: string;
+    phone: number;
+    role: "user" | "admin";
+    isProfileUpdated: boolean;
+};
+
 const verificationCodeGen = () => Math.floor(100000 + Math.random() * 900000);
 
-const createToken = ({ id, phone }: { id: string; phone: number }) => {
+const createToken = ({ id, phone, role, isProfileUpdated }: TokenParams) => {
     return sign(
         {
             id,
             phone,
+            role,
+            isProfileUpdated,
         },
         config.JWT_SECRET,
         {
@@ -23,20 +32,40 @@ const createToken = ({ id, phone }: { id: string; phone: number }) => {
 };
 
 export async function sendOTP(phone: number) {
-    const code = verificationCodeGen();
+    try {
+        const code = verificationCodeGen();
 
-    await prisma.otp.create({
-        data: {
-            phone,
-            otp: code,
-        },
-    });
+        const otpExists = await prisma.otp.findUnique({
+            where: {
+                phone,
+            },
+        });
 
-    // const message: string = `Your verification code is ${code}.`;
+        if (!otpExists) {
+            await prisma.otp.create({
+                data: {
+                    phone,
+                    otp: code,
+                },
+            });
+        } else {
+            await prisma.otp.update({
+                where: { phone },
+                data: {
+                    phone,
+                    otp: code,
+                },
+            });
+        }
 
-    // await sendSMS(phone, message);
+        // const message: string = `Your verification code is ${code}.`;
 
-    return "Verification code sent to your phone number";
+        // await sendSMS(phone, message);
+
+        return "Verification code sent to your phone number";
+    } catch (error: any) {
+        throw new CustomError(500, "Unexpected Server ERROR");
+    }
 }
 
 export async function verifyOTP(phone: number, otp: number) {
@@ -82,6 +111,8 @@ export async function verifyOTP(phone: number, otp: number) {
         const jwtToken = createToken({
             id: userdata.id,
             phone,
+            role: userdata.role,
+            isProfileUpdated: userdata.isProfileUpdated,
         });
 
         return {
@@ -91,13 +122,11 @@ export async function verifyOTP(phone: number, otp: number) {
         };
     }
 
-    if (!user.isRegistered) {
-        throw new CustomError(400, "User not registered");
-    }
-
     const jwtToken = createToken({
         id: user.id,
         phone: Number(user.phone.toString()),
+        role: user.role,
+        isProfileUpdated: user.isProfileUpdated,
     });
 
     await prisma.otp.delete({
@@ -130,13 +159,13 @@ export async function updateUserService(
             fullName,
             gender,
             email,
-            isRegistered: true,
+            isProfileUpdated: true,
         },
     });
 
     return {
         email: user.email,
-        phone: user.phone ? Number(user.phone.toString()) : null,
+        phone: Number(user.phone.toString()),
         fullName: user.fullName,
         gender: user.gender,
     };
