@@ -4,7 +4,6 @@ import { prisma } from "../utils/db";
 import { sendSMS } from "../utils/sms";
 import { CustomError } from "../utils/custom_error";
 
-import { CreateUserSchema } from "../schemas/auth.schema";
 import config from "../config/env";
 
 type TokenParams = {
@@ -138,31 +137,5 @@ export async function verifyOTP(phone: number, otp: number) {
     return {
         token: jwtToken,
         message: "Successfully Logged In",
-    };
-}
-
-export async function updateUserService(
-    userDetails: CreateUserSchema,
-    localuserdata: any,
-) {
-    const { fullName, gender, email } = userDetails;
-
-    const user = await prisma.user.update({
-        where: {
-            id: localuserdata.id,
-        },
-        data: {
-            fullName,
-            gender,
-            email,
-            isProfileUpdated: true,
-        },
-    });
-
-    return {
-        email: user.email,
-        phone: Number(user.phone.toString()),
-        fullName: user.fullName,
-        gender: user.gender,
     };
 }
