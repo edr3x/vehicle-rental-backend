@@ -48,3 +48,59 @@ export async function updateUserService(
         gender: user.gender,
     };
 }
+
+export async function uploadImageService(image: any, localuserdata: any) {}
+
+export async function updateAddressService(
+    address: UpdateAddressSchema,
+    localuserdata: any,
+) {
+    const { province, district, municipality, city, street } = address;
+
+    const message: string = "Address updated successfully";
+
+    const addressExists = await prisma.address.findUnique({
+        where: {
+            userId: localuserdata.id,
+        },
+    });
+
+    if (!addressExists) {
+        await prisma.$transaction([
+            prisma.address.create({
+                data: {
+                    province,
+                    district,
+                    municipality,
+                    city,
+                    street,
+                    userId: localuserdata.id,
+                },
+            }),
+            prisma.user.update({
+                where: {
+                    id: localuserdata.id,
+                },
+                data: {
+                    isProfileUpdated: true,
+                },
+            }),
+        ]);
+        return message;
+    }
+
+    await prisma.address.update({
+        where: {
+            userId: localuserdata.id,
+        },
+        data: {
+            province,
+            district,
+            municipality,
+            city,
+            street,
+        },
+    });
+
+    return message;
+}
