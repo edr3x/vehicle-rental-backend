@@ -10,7 +10,7 @@ export async function getAllUserService() {
         },
     });
 
-    let response: any = [];
+    let response: Array<any> = [];
 
     for (let i = 0; i < users.length; i++) {
         const user = users[i];
