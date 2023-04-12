@@ -1,7 +1,7 @@
 import { prisma } from "../utils/db";
 import { CustomError } from "../utils/custom_error";
 
-import { UpdateUserSchema } from "../schemas/user.schema";
+import { UpdateAddressSchema, UpdateUserSchema } from "../schemas/user.schema";
 
 export async function updateUserService(
     userDetails: UpdateUserSchema,
@@ -9,13 +9,23 @@ export async function updateUserService(
 ) {
     const { fullName, gender, email } = userDetails;
 
-    const isEmailExists = await prisma.user.findUnique({
+    const dbUser = await prisma.user.findUnique({
+        where: {
+            id: localuserdata.id,
+        },
+    });
+
+    if (!dbUser) {
+        throw new CustomError(400, "User not found");
+    }
+
+    const isDuplicateEmail = await prisma.user.findUnique({
         where: {
             email,
         },
     });
 
-    if (isEmailExists) {
+    if (dbUser.email !== email && isDuplicateEmail) {
         throw new CustomError(400, "Email already exists");
     }
 

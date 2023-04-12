@@ -1,8 +1,12 @@
 import { NextFunction, Request, Response } from "express";
 
-import { UpdateUserSchema } from "../schemas/user.schema";
+import { UpdateUserSchema, UpdateAddressSchema } from "../schemas/user.schema";
 
-import { updateUserService } from "../services/user.service";
+import {
+    updateAddressService,
+    updateUserService,
+    uploadImageService,
+} from "../services/user.service";
 
 export async function updateUserController(
     req: Request<{}, {}, UpdateUserSchema>,
