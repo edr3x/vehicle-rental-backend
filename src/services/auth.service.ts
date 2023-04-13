@@ -6,16 +6,16 @@ import { CustomError } from "../utils/custom_error";
 
 import config from "../config/env";
 
-type TokenParams = {
+type TokenParam = {
     id: string;
     phone: number;
-    role: "user" | "admin";
+    role: "user" | "driver" | "moderator" | "admin";
     isProfileUpdated: boolean;
 };
 
 const verificationCodeGen = () => Math.floor(100000 + Math.random() * 900000);
 
-const createToken = ({ id, phone, role, isProfileUpdated }: TokenParams) => {
+const createToken = ({ id, phone, role, isProfileUpdated }: TokenParam) => {
     return sign(
         {
             id,
@@ -67,7 +67,11 @@ export async function sendOTP(phone: number) {
     }
 }
 
-export async function verifyOTP(phone: number, otp: number) {
+export async function verifyOTP(
+    phone: number,
+    otp: number,
+    role: TokenParam["role"] = "user",
+) {
     const checkOTP = await prisma.otp.findUnique({
         where: {
             phone,
@@ -94,6 +98,7 @@ export async function verifyOTP(phone: number, otp: number) {
                 data: {
                     phone,
                     phoneVerified: true,
+                    role,
                 },
             }),
             prisma.otp.delete({

@@ -32,3 +32,19 @@ export async function verifyOTPController(
         next(e);
     }
 }
+
+export async function verifyDriverOTP(
+    req: Request<{}, {}, VerifyOTPSchema>,
+    res: Response,
+    next: NextFunction,
+) {
+    try {
+        const { phone, code } = req.body;
+
+        const response = await verifyOTP(phone, code, "driver");
+
+        return res.status(201).json({ success: true, data: response });
+    } catch (e: any) {
+        next(e);
+    }
+}

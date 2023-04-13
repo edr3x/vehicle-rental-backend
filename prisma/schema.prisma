@@ -9,6 +9,8 @@ datasource db {
 
 enum Role {
     user
+    driver
+    moderator
     admin
 }
 
@@ -23,19 +25,24 @@ model User {
     phone            BigInt    @unique
     fullName         String?
     email            String?   @unique
+    gender           Gender?
+    address          Address?
+    profileImage     String?
     role             Role      @default(user)
     isActive         Boolean   @default(true)
     isProfileUpdated Boolean   @default(false)
     isAddressUpdated Boolean   @default(false)
     phoneVerified    Boolean   @default(false)
     emailVerified    Boolean   @default(false)
-    gender           Gender?
-    profileImage     String?
     createdAt        DateTime  @default(now())
     updatedAt        DateTime  @updatedAt
-    address          Address?
     vehicle          Vehicle[]
     booking          Booking[]
+
+    // driver section
+    drivingLicense DrivingLicense?
+    isVerified     Boolean         @default(false)
+    isAvailabe     Boolean         @default(false)
 }
 
 model Otp {
@@ -47,18 +54,31 @@ model Otp {
 }
 
 model Address {
-    id              String         @id @default(uuid())
-    province        String
-    district        String
-    municipality    String
-    city            String
-    street          String?
-    createdAt       DateTime       @default(now())
-    updatedAt       DateTime       @updatedAt
-    user            User?          @relation(fields: [userId], references: [id])
-    userId          String?        @unique
-    vehicleDriver   VehicleDriver? @relation(fields: [vehicleDriverId], references: [id])
-    vehicleDriverId String?        @unique
+    id           String   @id @default(uuid())
+    province     String
+    district     String
+    municipality String
+    city         String
+    street       String?
+    createdAt    DateTime @default(now())
+    updatedAt    DateTime @updatedAt
+    user         User?    @relation(fields: [userId], references: [id])
+    userId       String?  @unique
+}
+
+model DrivingLicense {
+    id            String   @id @default(uuid())
+    driver        User     @relation(fields: [driverId], references: [id])
+    driverId      String   @unique
+    licenseType   String
+    licenseNo     String   @unique
+    issueDate     DateTime
+    citizenshipNo String
+    contactNo     BigInt
+    licensePic    String
+    isVerified    Boolean  @default(false)
+    createdAt     DateTime @default(now())
+    updatedAt     DateTime @updatedAt
 }
 
 enum VehicleType {
@@ -167,16 +187,4 @@ model Booking {
     bookedById  String
     createdAt   DateTime @default(now())
     updatedAt   DateTime @updatedAt
-}
-
-model VehicleDriver {
-    id          String   @id @default(uuid())
-    fullName    String
-    phone       BigInt
-    licenseType String
-    licenseNo   String   @unique
-    licensePic  String
-    isVerified  Boolean  @default(false)
-    isAvailable Boolean  @default(true)
-    address     Address?
 }

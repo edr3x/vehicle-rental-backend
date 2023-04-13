@@ -18,4 +18,10 @@ router.post(
     AuthController.verifyOTPController,
 );
 
+router.post(
+    "/verifyotp/driver",
+    verifyInput(verifyOTPSchema),
+    AuthController.verifyDriverOTP,
+);
+
 export default router;
