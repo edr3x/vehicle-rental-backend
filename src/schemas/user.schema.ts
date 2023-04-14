@@ -49,5 +49,23 @@ export const updateAddressSchema = z.object({
     }),
 });
 
+//todo: add detialed descriptions
+export const licenseDetailsSchema = z.object({
+    body: z.object({
+        licenseType: z.string(),
+
+        licenseNo: z.string({
+            required_error: "License number is required",
+        }),
+
+        issueDate: z.string(),
+
+        citizenshipNo: z.string(),
+
+        contactNo: z.number(),
+    }),
+});
+
 export type UpdateUserSchema = TypeOf<typeof updateUserSchema>["body"];
 export type UpdateAddressSchema = TypeOf<typeof updateAddressSchema>["body"];
+export type LicenseDetailsSchema = TypeOf<typeof licenseDetailsSchema>["body"];

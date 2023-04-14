@@ -1,11 +1,16 @@
 import { NextFunction, Request, Response } from "express";
 
-import { UpdateUserSchema, UpdateAddressSchema } from "../schemas/user.schema";
+import {
+    UpdateUserSchema,
+    UpdateAddressSchema,
+    LicenseDetailsSchema,
+} from "../schemas/user.schema";
 
 import {
     getAllUserService,
     getUserService,
     updateAddressService,
+    updateLicenseDetailsService,
     updateUserService,
     uploadImageService,
 } from "../services/user.service";
@@ -73,6 +78,23 @@ export async function updateAddressController(
 ) {
     try {
         const response = await updateAddressService(req.body, res.locals.user);
+
+        return res.status(201).json({ success: true, data: response });
+    } catch (e: any) {
+        next(e);
+    }
+}
+
+export async function updateLicenseDetailsController(
+    req: Request<{}, {}, LicenseDetailsSchema>,
+    res: Response,
+    next: NextFunction,
+) {
+    try {
+        const response = await updateLicenseDetailsService(
+            req.body,
+            res.locals.user,
+        );
 
         return res.status(201).json({ success: true, data: response });
     } catch (e: any) {

@@ -1,5 +1,6 @@
 import express from "express";
 import cors from "cors";
+import { join } from "path";
 
 import config from "./config/env";
 
@@ -8,6 +9,7 @@ import {
     notFound,
     customErrorHandler,
 } from "./middlewares/error_handlers.middleware";
+import { isLoggedIn } from "./middlewares/auth.middleware";
 
 const app = express();
 
@@ -15,6 +17,7 @@ const app = express();
 app.use(cors({ origin: "*" }));
 app.use(express.json());
 app.use("/api/v1", router);
+app.use("/image", isLoggedIn, express.static(join(__dirname, "uploads")));
 app.use(customErrorHandler);
 app.use(notFound);
 

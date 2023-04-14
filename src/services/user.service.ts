@@ -1,7 +1,11 @@
 import { prisma } from "../utils/db";
 import { CustomError } from "../utils/custom_error";
 
-import { UpdateAddressSchema, UpdateUserSchema } from "../schemas/user.schema";
+import {
+    LicenseDetailsSchema,
+    UpdateAddressSchema,
+    UpdateUserSchema,
+} from "../schemas/user.schema";
 
 export async function getAllUserService() {
     const users = await prisma.user.findMany({
@@ -158,6 +162,59 @@ export async function updateAddressService(
             street,
         },
     });
+
+    return message;
+}
+
+// warn: incomplete function
+export async function updateLicenseDetailsService(
+    licenseDetails: LicenseDetailsSchema,
+    localUserData: any,
+) {
+    const message: string = "License details updated successfully";
+
+    const user = await prisma.user.findUnique({
+        where: {
+            id: localUserData.id,
+        },
+    });
+
+    if (!user) {
+        throw new CustomError(400, "User not found");
+    }
+
+    const licenseDetailsExists = await prisma.drivingLicense.findUnique({
+        where: {
+            driverId: localUserData.id,
+        },
+    });
+
+    if (!licenseDetailsExists) {
+        await prisma.$transaction([
+            prisma.drivingLicense.create({
+                data: {
+                    driverId: localUserData.id,
+                    licenseNo: licenseDetails.licenseNo,
+                    licenseType: licenseDetails.licenseType,
+                    contactNo: licenseDetails.contactNo,
+                    citizenshipNo: licenseDetails.citizenshipNo,
+                    issueDate: licenseDetails.issueDate,
+                },
+            }),
+
+            prisma.user.update({
+                where: {
+                    id: localUserData.id,
+                },
+                data: {
+                    isProfileUpdated: true,
+                },
+            }),
+        ]);
+
+        return message;
+    }
+    //todo: update fields and many more
 
     return message;
 }
