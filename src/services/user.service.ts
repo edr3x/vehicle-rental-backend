@@ -111,8 +111,6 @@ export async function updateUserService(
     };
 }
 
-export async function uploadImageService(image: any, localuserdata: any) {}
-
 export async function updateAddressService(
     address: UpdateAddressSchema,
     localuserdata: any,

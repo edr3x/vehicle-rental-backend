@@ -19,8 +19,6 @@ router.patch(
     UserController.updateUserController,
 );
 
-router.post("/image", UserController.uploadImageController);
-
 router.patch(
     "/address",
     verifyInput(updateAddressSchema),
