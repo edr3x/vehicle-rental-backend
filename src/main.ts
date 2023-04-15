@@ -17,7 +17,7 @@ const app = express();
 app.use(cors({ origin: "*" }));
 app.use(express.json());
 app.use("/api/v1", router);
-app.use("/image", isLoggedIn, express.static(join(__dirname, "uploads")));
+app.use("/image", isLoggedIn, express.static(join(__dirname, "Storage")));
 app.use(customErrorHandler);
 app.use(notFound);
 

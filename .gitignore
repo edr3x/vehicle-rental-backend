@@ -14,3 +14,5 @@ package-lock.json
 
 # mirgration files
 prisma/migrations/
+
+src/Storage/

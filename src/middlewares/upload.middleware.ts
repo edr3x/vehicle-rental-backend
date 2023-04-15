@@ -3,7 +3,11 @@ import { Request } from "express";
 import multer from "multer";
 
 import { join } from "path";
+import { v4 as uuidv4 } from "uuid";
+
 import { CustomError } from "../utils/custom_error";
+
+const rand = Math.floor(10000 + Math.random() * 90000);
 
 const myStorage = multer.diskStorage({
     destination: (_req: Request, _file: any, cb: any) => {
@@ -11,7 +15,7 @@ const myStorage = multer.diskStorage({
         cb(null, uploadpath);
     },
     filename: (_req: Request, file: any, cb: any) => {
-        let filename = Date.now() + "." + file.originalname.split(".").pop();
+        let filename = uuidv4() + "." + file.originalname.split(".").pop();
         cb(null, filename);
     },
 });
