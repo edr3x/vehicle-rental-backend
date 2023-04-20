@@ -42,6 +42,7 @@ export async function getUserService(locaUserData: any) {
                 phone: true,
                 email: true,
                 gender: true,
+                role: true,
                 isProfileUpdated: true,
                 profileImage: true,
                 address: {
