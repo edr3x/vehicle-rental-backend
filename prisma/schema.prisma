@@ -106,6 +106,7 @@ enum DriveTrain {
 
 model Vehicle {
     id                  String          @id @default(uuid())
+    title               String
     addedBy             User            @relation(fields: [addedById], references: [id])
     addedById           String
     type                VehicleType
@@ -135,16 +136,18 @@ model Vehicle {
 }
 
 model Brand {
-    id      String    @id @default(uuid())
-    title   String
-    logo    String
-    Vehicle Vehicle[]
+    id          String    @id @default(uuid())
+    title       String
+    description String
+    logo        String?
+    Vehicle     Vehicle[]
 }
 
 model Category {
     id          String        @id @default(uuid())
     title       String
-    logo        String
+    description String
+    logo        String?
     SubCategory SubCategory[]
     Vehicle     Vehicle[]
 }
@@ -153,7 +156,7 @@ model SubCategory {
     id          String    @id @default(uuid())
     title       String
     description String
-    logo        String
+    logo        String?
     category    Category  @relation(fields: [categoryId], references: [id])
     categoryId  String
     Vehicle     Vehicle[]
@@ -171,19 +174,21 @@ model VehicleFeature {
     color             String
     noOfSeats         Int
     noOfDoors         Int
-    hasAC             Boolean
-    hasABS            Boolean
-    hasAirbag         Boolean
-    hasSunRoof        Boolean
-    hasPowerSteering  Boolean
-    hasUSBPort        Boolean
-    hasBluetooth      Boolean
-    hasKeylessEntry   Boolean
-    hasHeatedSeats    Boolean
-    hasBackCamera     Boolean
-    hasParkingSensors Boolean
-    hasAutoDrive      Boolean
+    hasAC             Boolean      @default(false)
+    hasABS            Boolean      @default(false)
+    hasAirbag         Boolean      @default(false)
+    hasSunRoof        Boolean      @default(false)
+    hasPowerSteering  Boolean      @default(false)
+    hasUSBPort        Boolean      @default(false)
+    hasBluetooth      Boolean      @default(false)
+    hasKeylessEntry   Boolean      @default(false)
+    hasHeatedSeats    Boolean      @default(false)
+    hasBackCamera     Boolean      @default(false)
+    hasParkingSensors Boolean      @default(false)
+    hasAutoDrive      Boolean      @default(false)
     transmission      Transmission
+    gClearance        Int          @default(4)
+    fuelTank          Int          @default(4)
 }
 
 model Booking {
