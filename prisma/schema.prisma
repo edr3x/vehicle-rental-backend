@@ -118,7 +118,7 @@ model Vehicle {
     brandId             String
     model               String
     features            VehicleFeature?
-    thumbnail           String
+    thumbnail           String?
     images              String[]
     isBooked            Boolean         @default(false)
     isVerified          Boolean         @default(false)
