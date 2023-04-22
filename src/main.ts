@@ -9,7 +9,6 @@ import {
     notFound,
     customErrorHandler,
 } from "./middlewares/error_handlers.middleware";
-import { isLoggedIn } from "./middlewares/auth.middleware";
 
 const app = express();
 
@@ -17,7 +16,7 @@ const app = express();
 app.use(cors({ origin: "*" }));
 app.use(express.json());
 app.use("/api/v1", router);
-app.use("/image", isLoggedIn, express.static(join(__dirname, "Storage")));
+app.use("/image", express.static(join(__dirname, "Storage")));
 app.use(customErrorHandler);
 app.use(notFound);
 

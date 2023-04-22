@@ -24,7 +24,6 @@ export async function getAllUserService() {
         response.push({
             ...user,
             phone: Number(user.phone.toString()),
-            profileImage: `${config.HOST}/image/${user.profileImage}`,
         });
     }
 
@@ -63,7 +62,6 @@ export async function getUserService(locaUserData: any) {
         return {
             ...user,
             phone: Number(user.phone.toString()),
-            profileImage: `${config.HOST}/image/${user.profileImage}`,
         };
     } catch (e: any) {
         throw new CustomError(400, e.message);
