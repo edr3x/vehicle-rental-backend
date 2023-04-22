@@ -22,7 +22,21 @@ export async function updateProfilePic(image: any, loggedInUser: any) {
     });
 
     return {
-        msg: "Profile Picture Updated Successfully",
+        message: "Profile Picture Updated Successfully",
         image: upload.profileImage,
+    };
+}
+
+export async function updateLicensePic(image: any, loggedInUser: any) {
+    const upload = await prisma.drivingLicense.update({
+        where: { driverId: loggedInUser.id },
+        data: {
+            licenseNo: image,
+        },
+    });
+
+    return {
+        message: "License Picture Updated Successfully",
+        image: upload.licensePic,
     };
 }

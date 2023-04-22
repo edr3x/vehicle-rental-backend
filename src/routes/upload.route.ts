@@ -1,5 +1,6 @@
 import { Router } from "express";
 import {
+    updateLicensePicController,
     updateProfilePicController,
     uploadController,
 } from "../controllers/upload.controller";
@@ -11,5 +12,7 @@ const router = Router();
 router.post("/image", uploader.array("images"), uploadController);
 
 router.patch("/profile", uploader.single("image"), updateProfilePicController);
+
+router.patch("/license", uploader.single("image"), updateLicensePicController);
 
 export default router;

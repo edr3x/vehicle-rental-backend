@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import {
+    updateLicensePic,
     updateProfilePic as updateProfilePicService,
     uploadService,
 } from "../services/upload.service";
@@ -25,7 +26,7 @@ export async function uploadController(
 }
 
 export async function updateProfilePicController(
-    req: Request<{}, {}, { images: any }>,
+    req: Request<{}, {}, { image: any }>,
     res: Response,
     next: NextFunction,
 ) {
@@ -33,6 +34,25 @@ export async function updateProfilePicController(
         let image = req.file as MulterFile | undefined;
 
         const response = await updateProfilePicService(
+            image?.filename,
+            res.locals.user,
+        );
+
+        return res.status(201).json({ success: true, data: response });
+    } catch (e: any) {
+        next(e);
+    }
+}
+
+export async function updateLicensePicController(
+    req: Request<{}, {}, { image: any }>,
+    res: Response,
+    next: NextFunction,
+) {
+    try {
+        let image = req.file as MulterFile | undefined;
+
+        const response = await updateLicensePic(
             image?.filename,
             res.locals.user,
         );
