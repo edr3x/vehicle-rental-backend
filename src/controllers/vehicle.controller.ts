@@ -6,6 +6,9 @@ import {
     AddCategorySchema,
     AddSubCategorySchema,
     AddVehicleSchema,
+    UpdateBrandSchema,
+    UpdateCategorySchema,
+    UpdateSubCategorySchema,
 } from "../schemas/vehicle.schema";
 
 export async function listAllCategoryController(
@@ -37,13 +40,17 @@ export async function addCategoryController(
 }
 
 export async function updateCategoryController(
-    req: Request,
+    req: Request<
+        UpdateCategorySchema["params"],
+        {},
+        UpdateCategorySchema["body"]
+    >,
     res: Response,
     next: NextFunction,
 ) {
     try {
         const response = await VehicleService.updateCategory(
-            req.params.id,
+            req.params.categoryId,
             req.body,
         );
         return res.status(200).json({ success: true, data: response });
@@ -79,13 +86,17 @@ export async function addSubCategoryController(
 }
 
 export async function updateSubCategoryController(
-    req: Request,
+    req: Request<
+        UpdateSubCategorySchema["params"],
+        {},
+        UpdateSubCategorySchema["body"]
+    >,
     res: Response,
     next: NextFunction,
 ) {
     try {
         const response = await VehicleService.updateSubCategory(
-            req.params.id,
+            req.params.subCategoryId,
             req.body,
         );
         return res.status(200).json({ success: true, data: response });
@@ -134,13 +145,13 @@ export async function addBrandController(
 }
 
 export async function updateBrandController(
-    req: Request,
+    req: Request<UpdateBrandSchema["params"], {}, UpdateBrandSchema["body"]>,
     res: Response,
     next: NextFunction,
 ) {
     try {
         const response = await VehicleService.updateBrand(
-            req.params.id,
+            req.params.brandId,
             req.body,
         );
         return res.status(200).json({ success: true, data: response });

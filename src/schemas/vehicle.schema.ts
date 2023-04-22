@@ -20,6 +20,36 @@ export const addCategorySchema = z.object({
     }),
 });
 
+export const updateCategorySchema = z.object({
+    params: z.object({
+        categoryId: z.string({
+            required_error: "Category must be provided",
+            invalid_type_error: "Category must be provided",
+        }),
+    }),
+    body: z.object({
+        title: z
+            .string({
+                required_error: "Title is required",
+                invalid_type_error: "Title must be a string",
+            })
+            .optional(),
+
+        description: z
+            .string({
+                required_error: "Description is required",
+                invalid_type_error: "Description must be a string",
+            })
+            .optional(),
+
+        logo: z
+            .string({
+                invalid_type_error: "Invalid Logo",
+            })
+            .optional(),
+    }),
+});
+
 export const addSubCategorySchema = z.object({
     body: z.object({
         title: z.string({
@@ -45,6 +75,42 @@ export const addSubCategorySchema = z.object({
     }),
 });
 
+export const updateSubCategorySchema = z.object({
+    params: z.object({
+        subCategoryId: z.string({
+            required_error: "Category must be provided",
+            invalid_type_error: "Category must be provided",
+        }),
+    }),
+
+    body: z.object({
+        title: z
+            .string({
+                required_error: "Title is required",
+                invalid_type_error: "Title must be a string",
+            })
+            .optional(),
+
+        description: z
+            .string({
+                required_error: "Description is required",
+                invalid_type_error: "Description must be a string",
+            })
+            .optional(),
+
+        logo: z
+            .string({
+                invalid_type_error: "Invalid Image",
+            })
+            .optional(),
+
+        categoryId: z.string({
+            required_error: "Category must be provided",
+            invalid_type_error: "Category must be provided",
+        }),
+    }),
+});
+
 export const addBrandSchema = z.object({
     body: z.object({
         title: z.string({
@@ -56,6 +122,36 @@ export const addBrandSchema = z.object({
             required_error: "Description is required",
             invalid_type_error: "Description must be a string",
         }),
+
+        logo: z
+            .string({
+                invalid_type_error: "Invalid Image",
+            })
+            .optional(),
+    }),
+});
+
+export const updateBrandSchema = z.object({
+    params: z.object({
+        brandId: z.string({
+            required_error: "Brand must be provided",
+            invalid_type_error: "Brand must be provided",
+        }),
+    }),
+    body: z.object({
+        title: z
+            .string({
+                required_error: "Title is required",
+                invalid_type_error: "Title must be a string",
+            })
+            .optional(),
+
+        description: z
+            .string({
+                required_error: "Description is required",
+                invalid_type_error: "Description must be a string",
+            })
+            .optional(),
 
         logo: z
             .string({
@@ -189,5 +285,8 @@ export const addVehicleSchema = z.object({
 
 export type AddVehicleSchema = TypeOf<typeof addVehicleSchema>["body"];
 export type AddCategorySchema = TypeOf<typeof addCategorySchema>["body"];
+export type UpdateCategorySchema = TypeOf<typeof updateCategorySchema>;
 export type AddSubCategorySchema = TypeOf<typeof addSubCategorySchema>["body"];
+export type UpdateSubCategorySchema = TypeOf<typeof updateSubCategorySchema>;
 export type AddBrandSchema = TypeOf<typeof addBrandSchema>["body"];
+export type UpdateBrandSchema = TypeOf<typeof updateBrandSchema>;

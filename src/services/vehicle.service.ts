@@ -3,6 +3,9 @@ import {
     AddCategorySchema,
     AddSubCategorySchema,
     AddVehicleSchema,
+    UpdateBrandSchema,
+    UpdateCategorySchema,
+    UpdateSubCategorySchema,
 } from "../schemas/vehicle.schema";
 import { calculateDistance } from "../utils/calculate_distance";
 import { prisma } from "../utils/db";
@@ -20,7 +23,10 @@ export async function addCategory(categoryDetails: AddCategorySchema) {
     return { msg: "Category added", result: category };
 }
 
-export async function updateCategory(id: string, categoryDetails: any) {
+export async function updateCategory(
+    id: string,
+    categoryDetails: UpdateCategorySchema["body"],
+) {
     const { title, description, logo } = categoryDetails;
     await prisma.category.update({
         where: {
@@ -62,7 +68,10 @@ export async function addSubCategory(subCategoryDetails: AddSubCategorySchema) {
     return { msg: "Category added", result: subCategory };
 }
 
-export async function updateSubCategory(id: string, subCategoryDetails: any) {
+export async function updateSubCategory(
+    id: string,
+    subCategoryDetails: UpdateSubCategorySchema["body"],
+) {
     const { title, description, categoryId, logo } = subCategoryDetails;
     await prisma.subCategory.update({
         where: {
@@ -104,7 +113,10 @@ export async function addBrand(brandDetails: AddBrandSchema) {
     return { msg: "Brand added", result: brand };
 }
 
-export async function updateBrand(id: string, brandDetails: any) {
+export async function updateBrand(
+    id: string,
+    brandDetails: UpdateBrandSchema["body"],
+) {
     const { title, description, logo } = brandDetails;
     await prisma.brand.update({
         where: {
