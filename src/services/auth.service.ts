@@ -5,6 +5,7 @@ import { sendSMS } from "../utils/sms";
 import { CustomError } from "../utils/custom_error";
 
 import config from "../config/env";
+import { logger } from "../utils/logger";
 
 type TokenParam = {
     id: string;
@@ -147,4 +148,21 @@ export async function verifyOTP(
         role: user.role,
         message: "Successfully Logged In",
     };
+}
+
+export async function deleteOtp() {
+    try {
+        const currentTime = new Date();
+        const cutoffTime = new Date(currentTime.getTime() - 180000);
+
+        await prisma.otp.deleteMany({
+            where: {
+                updatedAt: {
+                    lt: cutoffTime,
+                },
+            },
+        });
+    } catch (e) {
+        logger.error(e);
+    }
 }
