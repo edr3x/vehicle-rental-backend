@@ -4,9 +4,11 @@ import {
     UpdateUserSchema,
     UpdateAddressSchema,
     LicenseDetailsSchema,
+    UpdateLicenseSchema,
 } from "../schemas/user.schema";
 
 import {
+    createLicenseDetailsService,
     getAllUserService,
     getUserService,
     updateAddressService,
@@ -50,7 +52,7 @@ export async function updateUserController(
     try {
         const response = await updateUserService(req.body, res.locals.user);
 
-        return res.status(201).json({ success: true, data: response });
+        return res.status(200).json({ success: true, data: response });
     } catch (e: any) {
         next(e);
     }
@@ -64,6 +66,23 @@ export async function updateAddressController(
     try {
         const response = await updateAddressService(req.body, res.locals.user);
 
+        return res.status(200).json({ success: true, data: response });
+    } catch (e: any) {
+        next(e);
+    }
+}
+
+export async function postLicenseDetailsController(
+    req: Request<{}, {}, LicenseDetailsSchema>,
+    res: Response,
+    next: NextFunction,
+) {
+    try {
+        const response = await createLicenseDetailsService(
+            req.body,
+            res.locals.user,
+        );
+
         return res.status(201).json({ success: true, data: response });
     } catch (e: any) {
         next(e);
@@ -71,7 +90,7 @@ export async function updateAddressController(
 }
 
 export async function updateLicenseDetailsController(
-    req: Request<{}, {}, LicenseDetailsSchema>,
+    req: Request<{}, {}, UpdateLicenseSchema>,
     res: Response,
     next: NextFunction,
 ) {
@@ -81,7 +100,7 @@ export async function updateLicenseDetailsController(
             res.locals.user,
         );
 
-        return res.status(201).json({ success: true, data: response });
+        return res.status(200).json({ success: true, data: response });
     } catch (e: any) {
         next(e);
     }

@@ -2,7 +2,11 @@ import { Router } from "express";
 
 import { verifyInput } from "../middlewares/verifyinput.middleware";
 
-import { updateAddressSchema, updateUserSchema } from "../schemas/user.schema";
+import {
+    licenseDetailsSchema,
+    updateAddressSchema,
+    updateUserSchema,
+} from "../schemas/user.schema";
 
 import * as UserController from "../controllers/user.controller";
 import { isAdmin } from "../middlewares/auth.middleware";
@@ -17,6 +21,12 @@ router.patch(
     "/profile",
     verifyInput(updateUserSchema),
     UserController.updateUserController,
+);
+
+router.post(
+    "/address",
+    verifyInput(licenseDetailsSchema),
+    UserController.postLicenseDetailsController,
 );
 
 router.patch(

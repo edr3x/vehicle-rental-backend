@@ -1,11 +1,10 @@
-import config from "../config/env";
-
 import { prisma } from "../utils/db";
 import { CustomError } from "../utils/custom_error";
 
 import {
     LicenseDetailsSchema,
     UpdateAddressSchema,
+    UpdateLicenseSchema,
     UpdateUserSchema,
 } from "../schemas/user.schema";
 
@@ -168,9 +167,45 @@ export async function updateAddressService(
     return message;
 }
 
-// warn: incomplete function
+export async function createLicenseDetailsService(
+    licenseDetials: LicenseDetailsSchema,
+    localUserData: any,
+) {
+    const user = await prisma.user.findUnique({
+        where: {
+            id: localUserData.id,
+        },
+    });
+
+    if (!user) {
+        throw new CustomError(400, "User not found");
+    }
+
+    const licenseDetailsExists = await prisma.drivingLicense.findUnique({
+        where: {
+            driverId: localUserData.id,
+        },
+    });
+
+    if (licenseDetailsExists) {
+        throw new CustomError(400, "License details already exists");
+    }
+
+    const license = await prisma.drivingLicense.create({
+        data: {
+            ...licenseDetials,
+            driverId: localUserData.id,
+        },
+    });
+
+    return {
+        message: "License details created successfully",
+        license,
+    };
+}
+
 export async function updateLicenseDetailsService(
-    licenseDetails: LicenseDetailsSchema,
+    licenseDetails: UpdateLicenseSchema,
     localUserData: any,
 ) {
     const message: string = "License details updated successfully";
@@ -192,31 +227,13 @@ export async function updateLicenseDetailsService(
     });
 
     if (!licenseDetailsExists) {
-        await prisma.$transaction([
-            prisma.drivingLicense.create({
-                data: {
-                    driverId: localUserData.id,
-                    licenseNo: licenseDetails.licenseNo,
-                    licenseType: licenseDetails.licenseType,
-                    contactNo: licenseDetails.contactNo,
-                    citizenshipNo: licenseDetails.citizenshipNo,
-                    issueDate: licenseDetails.issueDate,
-                },
-            }),
-
-            prisma.user.update({
-                where: {
-                    id: localUserData.id,
-                },
-                data: {
-                    isProfileUpdated: true,
-                },
-            }),
-        ]);
-
-        return message;
+        throw new CustomError(400, "License details not found");
     }
-    //todo: update fields and many more
+
+    await prisma.drivingLicense.update({
+        where: { driverId: localUserData.id },
+        data: licenseDetails,
+    });
 
     return message;
 }
