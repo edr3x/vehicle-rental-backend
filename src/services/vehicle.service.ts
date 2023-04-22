@@ -1,6 +1,3 @@
-// TODO: have to fix all
-/*
-
 import {
     AddBrandSchema,
     AddCategorySchema,
@@ -11,7 +8,7 @@ import { calculateDistance } from "../utils/calculate_distance";
 import { prisma } from "../utils/db";
 import config from "../config/env";
 
-export const addCategory = async (categoryDetails: AddCategorySchema) => {
+export async function addCategory(categoryDetails: AddCategorySchema) {
     const { title, description, logo } = categoryDetails;
     const category = await prisma.category.create({
         data: {
@@ -21,11 +18,11 @@ export const addCategory = async (categoryDetails: AddCategorySchema) => {
         },
     });
     return { msg: "Category added", result: category };
-};
+}
 
-export const updateCategory = async (id: string, categoryDetails: any) => {
+export async function updateCategory(id: string, categoryDetails: any) {
     const { title, description, logo } = categoryDetails;
-    const category = await prisma.category.update({
+    await prisma.category.update({
         where: {
             id: id,
         },
@@ -36,25 +33,23 @@ export const updateCategory = async (id: string, categoryDetails: any) => {
         },
     });
     return { msg: "Category updated" };
-};
+}
 
-export const listAllCategory = async () => {
+export async function listAllCategory() {
     const category = await prisma.category.findMany();
     return { msg: "ALl Category Fetched", result: category };
-};
+}
 
-export const deleteCategory = async (id: string) => {
+export async function deleteCategory(id: string) {
     await prisma.category.delete({
         where: {
             id: id,
         },
     });
     return { msg: "Category Deleted" };
-};
+}
 
-export const addSubCategory = async (
-    subCategoryDetails: AddSubCategorySchema,
-) => {
+export async function addSubCategory(subCategoryDetails: AddSubCategorySchema) {
     const { title, description, categoryId, logo } = subCategoryDetails;
     const subCategory = await prisma.subCategory.create({
         data: {
@@ -65,14 +60,11 @@ export const addSubCategory = async (
         },
     });
     return { msg: "Category added", result: subCategory };
-};
+}
 
-export const updateSubCategory = async (
-    id: string,
-    subCategoryDetails: any,
-) => {
+export async function updateSubCategory(id: string, subCategoryDetails: any) {
     const { title, description, categoryId, logo } = subCategoryDetails;
-    const subCategory = await prisma.subCategory.update({
+    await prisma.subCategory.update({
         where: {
             id: id,
         },
@@ -84,23 +76,23 @@ export const updateSubCategory = async (
         },
     });
     return { msg: "Category Updated" };
-};
+}
 
-export const listAllSubCategory = async () => {
+export async function listAllSubCategory() {
     const subCategory = await prisma.subCategory.findMany();
     return { msg: "ALl Sub Categories Fetched", result: subCategory };
-};
+}
 
-export const deleteSubCategory = async (id: string) => {
+export async function deleteSubCategory(id: string) {
     await prisma.subCategory.delete({
         where: {
             id: id,
         },
     });
     return { msg: "Sub-Category Deleted" };
-};
+}
 
-export const addBrand = async (brandDetails: AddBrandSchema) => {
+export async function addBrand(brandDetails: AddBrandSchema) {
     const { title, description, logo } = brandDetails;
     const brand = await prisma.brand.create({
         data: {
@@ -110,11 +102,11 @@ export const addBrand = async (brandDetails: AddBrandSchema) => {
         },
     });
     return { msg: "Brand added", result: brand };
-};
+}
 
-export const updateBrand = async (id: string, brandDetails: any) => {
+export async function updateBrand(id: string, brandDetails: any) {
     const { title, description, logo } = brandDetails;
-    const brand = await prisma.brand.update({
+    await prisma.brand.update({
         where: {
             id: id,
         },
@@ -125,21 +117,21 @@ export const updateBrand = async (id: string, brandDetails: any) => {
         },
     });
     return { msg: "Brand Updated" };
-};
+}
 
-export const listAllBrands = async () => {
+export async function listAllBrands() {
     const brands = await prisma.brand.findMany();
     return { msg: "ALl Brands Fetched", result: brands };
-};
+}
 
-export const deleteBrand = async (id: string) => {
+export async function deleteBrand(id: string) {
     await prisma.brand.delete({
         where: {
             id: id,
         },
     });
     return { msg: "Brand Deleted" };
-};
+}
 
 export async function addVehicle(
     vehicleDetails: AddVehicleSchema,
@@ -227,11 +219,11 @@ export async function listAllVehicle() {
         },
     });
 
-    // vehicles.map((vehicle) => {
-    //     vehicle.thumbnail = `${config.UPLOADS}${vehicle.thumbnail}`;
-    //     vehicle.brand.logo = `${config.UPLOADS}${vehicle.brand.logo}`;
-    //     return vehicle;
-    // });
+    vehicles.map((vehicle) => {
+        vehicle.thumbnail = `${config.HOST}/image/${vehicle.thumbnail}`;
+        vehicle.brand.logo = `${config.HOST}/image/${vehicle.brand.logo}`;
+        return vehicle;
+    });
 
     return { msg: "Vehicles fetched", result: vehicles };
 }
@@ -292,12 +284,11 @@ export async function getVehiclesNearMe(lat: number, lon: number) {
         }
     }
 
-    // newArr.map((vehicle) => {
-    //     vehicle.thumbnail = `${config.UPLOADS}${vehicle.thumbnail}`;
-    //     vehicle.brand.logo = `${config.UPLOADS}${vehicle.brand.logo}`;
-    //     return vehicle;
-    // });
+    newArr.map((vehicle) => {
+        vehicle.thumbnail = `${config.HOST}/image/${vehicle.thumbnail}`;
+        vehicle.brand.logo = `${config.HOST}/image/${vehicle.brand.logo}`;
+        return vehicle;
+    });
 
     return { msg: "Vehicles near me fetched", result: newArr };
 }
-*/
