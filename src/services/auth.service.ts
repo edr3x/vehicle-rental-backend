@@ -122,8 +122,9 @@ export async function verifyOTP(
 
         return {
             token: jwtToken,
-            isProfileUpdated: userdata.isProfileUpdated,
             role: userdata.role,
+            isProfileUpdated: userdata.isProfileUpdated, // myth: yeah this looks stupid, i know 😀
+            isAddressUpdated: userdata.isAddressUpdated,
             message:
                 "OTP Verified Successfully, fillup personal details to continue",
         };
@@ -146,6 +147,7 @@ export async function verifyOTP(
         token: jwtToken,
         isProfileUpdated: user.isProfileUpdated,
         role: user.role,
+        isAddressUpdated: user.isAddressUpdated,
         message: "Successfully Logged In",
     };
 }
