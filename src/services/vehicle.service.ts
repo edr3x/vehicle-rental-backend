@@ -101,6 +101,15 @@ export async function deleteSubCategory(id: string) {
     return { msg: "Sub-Category Deleted" };
 }
 
+export async function findSubCategoryFromCategory(categoryId: string) {
+    const subCategory = await prisma.subCategory.findMany({
+        where: {
+            categoryId,
+        },
+    });
+    return { msg: "Sub Categories Fetched", result: subCategory };
+}
+
 export async function addBrand(brandDetails: AddBrandSchema) {
     const { title, description, logo } = brandDetails;
     const brand = await prisma.brand.create({

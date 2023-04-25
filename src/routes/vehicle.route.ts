@@ -29,6 +29,11 @@ router.patch(
 router.delete("/category/:id", VehicleController.deleteCategoryController);
 
 router.get("/subcategory", VehicleController.listAllSubCategoryController);
+//note: To file subcategory by category
+router.get(
+    "/subcategory/findbycategory/:id", //note: here id is categoryId
+    VehicleController.findSubCategoryFromCategoryController,
+);
 router.post(
     "/subcategory",
     verifyInput(addSubCategorySchema),

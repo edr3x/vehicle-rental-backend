@@ -131,6 +131,22 @@ export async function deleteSubCategoryController(
     }
 }
 
+export async function findSubCategoryFromCategoryController(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+) {
+    try {
+        const response = await VehicleService.findSubCategoryFromCategory(
+            req.params.id,
+        );
+
+        return res.status(200).json({ success: true, data: response });
+    } catch (e: any) {
+        next(e);
+    }
+}
+
 export async function addBrandController(
     req: Request<{}, {}, AddBrandSchema>,
     res: Response,
