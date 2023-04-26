@@ -12,13 +12,8 @@ import { prisma } from "../utils/db";
 import config from "../config/env";
 
 export async function addCategory(categoryDetails: AddCategorySchema) {
-    const { title, description, logo } = categoryDetails;
     const category = await prisma.category.create({
-        data: {
-            title,
-            description,
-            logo,
-        },
+        data: categoryDetails,
     });
     return { msg: "Category added", result: category };
 }
@@ -27,16 +22,9 @@ export async function updateCategory(
     id: string,
     categoryDetails: UpdateCategorySchema["body"],
 ) {
-    const { title, description, logo } = categoryDetails;
     await prisma.category.update({
-        where: {
-            id: id,
-        },
-        data: {
-            title,
-            description,
-            logo,
-        },
+        where: { id },
+        data: categoryDetails,
     });
     return { msg: "Category updated" };
 }
@@ -56,14 +44,8 @@ export async function deleteCategory(id: string) {
 }
 
 export async function addSubCategory(subCategoryDetails: AddSubCategorySchema) {
-    const { title, description, categoryId, logo } = subCategoryDetails;
     const subCategory = await prisma.subCategory.create({
-        data: {
-            title,
-            description,
-            logo,
-            categoryId,
-        },
+        data: subCategoryDetails,
     });
     return { msg: "Category added", result: subCategory };
 }
@@ -72,17 +54,9 @@ export async function updateSubCategory(
     id: string,
     subCategoryDetails: UpdateSubCategorySchema["body"],
 ) {
-    const { title, description, categoryId, logo } = subCategoryDetails;
     await prisma.subCategory.update({
-        where: {
-            id: id,
-        },
-        data: {
-            title,
-            description,
-            logo,
-            categoryId,
-        },
+        where: { id },
+        data: subCategoryDetails,
     });
     return { msg: "Category Updated" };
 }
@@ -111,13 +85,8 @@ export async function findSubCategoryFromCategory(categoryId: string) {
 }
 
 export async function addBrand(brandDetails: AddBrandSchema) {
-    const { title, description, logo } = brandDetails;
     const brand = await prisma.brand.create({
-        data: {
-            title,
-            description,
-            logo,
-        },
+        data: brandDetails,
     });
     return { msg: "Brand added", result: brand };
 }
@@ -126,18 +95,11 @@ export async function updateBrand(
     id: string,
     brandDetails: UpdateBrandSchema["body"],
 ) {
-    const { title, description, logo } = brandDetails;
-    await prisma.brand.update({
-        where: {
-            id: id,
-        },
-        data: {
-            title,
-            description,
-            logo,
-        },
+    const result = await prisma.brand.update({
+        where: { id },
+        data: brandDetails,
     });
-    return { msg: "Brand Updated" };
+    return { msg: "Brand Updated", result };
 }
 
 export async function listAllBrands() {

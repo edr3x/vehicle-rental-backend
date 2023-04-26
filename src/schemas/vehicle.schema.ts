@@ -78,22 +78,20 @@ export const addSubCategorySchema = z.object({
 export const updateSubCategorySchema = z.object({
     params: z.object({
         subCategoryId: z.string({
-            required_error: "Category must be provided",
-            invalid_type_error: "Category must be provided",
+            required_error: "Category Id must be provided",
+            invalid_type_error: "Category Id must be provided",
         }),
     }),
 
     body: z.object({
         title: z
             .string({
-                required_error: "Title is required",
                 invalid_type_error: "Title must be a string",
             })
             .optional(),
 
         description: z
             .string({
-                required_error: "Description is required",
                 invalid_type_error: "Description must be a string",
             })
             .optional(),
@@ -104,10 +102,11 @@ export const updateSubCategorySchema = z.object({
             })
             .optional(),
 
-        categoryId: z.string({
-            required_error: "Category must be provided",
-            invalid_type_error: "Category must be provided",
-        }),
+        categoryId: z
+            .string({
+                invalid_type_error: "Category Id must be a string",
+            })
+            .optional(),
     }),
 });
 
