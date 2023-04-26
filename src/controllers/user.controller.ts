@@ -9,6 +9,7 @@ import {
 
 import {
     createLicenseDetailsService,
+    deleteUserService,
     getAllUserService,
     getUserService,
     updateAddressService,
@@ -99,6 +100,20 @@ export async function updateLicenseDetailsController(
             req.body,
             res.locals.user,
         );
+
+        return res.status(200).json({ success: true, data: response });
+    } catch (e: any) {
+        next(e);
+    }
+}
+
+export async function deleteUser(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+) {
+    try {
+        const response = await deleteUserService(req.params.id);
 
         return res.status(200).json({ success: true, data: response });
     } catch (e: any) {

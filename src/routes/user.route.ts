@@ -35,4 +35,6 @@ router.patch(
     UserController.updateAddressController,
 );
 
+router.delete("/:id", isAdmin, UserController.deleteUser);
+
 export default router;

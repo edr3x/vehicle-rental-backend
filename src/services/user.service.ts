@@ -237,3 +237,33 @@ export async function updateLicenseDetailsService(
 
     return message;
 }
+
+export async function deleteUserService(id: string) {
+    const user = await prisma.user.findUnique({
+        where: { id },
+    });
+
+    if (!user) {
+        throw new CustomError(400, "User not found");
+    }
+
+    await prisma.$transaction([
+        prisma.address.delete({
+            where: {
+                userId: id,
+            },
+        }),
+        prisma.drivingLicense.delete({
+            where: {
+                driverId: id,
+            },
+        }),
+        prisma.user.delete({
+            where: {
+                id,
+            },
+        }),
+    ]);
+
+    return "User deleted successfully";
+}
