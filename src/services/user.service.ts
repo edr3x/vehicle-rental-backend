@@ -145,7 +145,7 @@ export async function updateAddressService(
                     id: localuserdata.id,
                 },
                 data: {
-                    isProfileUpdated: true,
+                    isAddressUpdated: true,
                 },
             }),
         ]);
