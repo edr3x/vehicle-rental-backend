@@ -6,13 +6,17 @@ export async function bookingService(
     localUser: any,
     bookingDetails: BookingSchema,
 ) {
-    const alreadyBooked = await prisma.booking.findUnique({
+    const vehicleDetails = await prisma.vehicle.findUnique({
         where: {
-            vehicleId: bookingDetails.vehicleId,
+            id: bookingDetails.vehicleId,
         },
     });
 
-    if (alreadyBooked) {
+    if (!vehicleDetails) {
+        throw new CustomError(400, "Vehicle Not Found");
+    }
+
+    if (vehicleDetails.isBooked) {
         throw new CustomError(400, "Vehicle is Already Booked");
     }
 
