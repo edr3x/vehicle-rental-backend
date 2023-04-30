@@ -1,6 +1,11 @@
 import { Request, Response, NextFunction } from "express";
 
-import { bookingService } from "../services/booking.service";
+import {
+    bookingService,
+    cancelBookingService,
+    myBookingRequestService,
+    myBookingsService,
+} from "../services/booking.service";
 import { BookingSchema } from "../schemas/booking.schema";
 
 export async function bookVehicleController(
@@ -12,6 +17,49 @@ export async function bookVehicleController(
         const response = await bookingService(res.locals.user, req.body);
 
         return res.status(201).json({ success: true, data: response });
+    } catch (e: any) {
+        next(e);
+    }
+}
+
+export async function cancelBookingController(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+) {
+    try {
+        const bookingid = req.params.id;
+        const response = await cancelBookingService(bookingid, res.locals.user);
+
+        return res.status(200).json({ success: true, data: response });
+    } catch (e: any) {
+        next(e);
+    }
+}
+
+export async function getMyBookingsController(
+    _req: Request,
+    res: Response,
+    next: NextFunction,
+) {
+    try {
+        const response = await myBookingsService(res.locals.user);
+
+        return res.status(200).json({ success: true, data: response });
+    } catch (e: any) {
+        next(e);
+    }
+}
+
+export async function myBookingRequestController(
+    _req: Request,
+    res: Response,
+    next: NextFunction,
+) {
+    try {
+        const response = await myBookingRequestService(res.locals.user);
+
+        return res.status(200).json({ success: true, data: response });
     } catch (e: any) {
         next(e);
     }

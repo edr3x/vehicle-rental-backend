@@ -38,3 +38,11 @@ export async function bookingService(
 
     return { msg: "Vehicle Booked" };
 }
+
+export async function cancelBookingService(bokingId: string, userdata: any) {}
+
+export async function myBookingsService(userdata: any) {}
+
+export async function myBookingRequestService(userdata: any) {}
+
+export async function deleteExpiredBookingsService() {}
