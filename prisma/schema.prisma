@@ -104,14 +104,20 @@ enum DriveTrain {
     allWheel
 }
 
+enum VehicleCategory {
+    car
+    bike
+    scooter
+    bicycle
+}
+
 model Vehicle {
     id                  String          @id @default(uuid())
     title               String
     addedBy             User            @relation(fields: [addedById], references: [id])
     addedById           String
     type                VehicleType
-    category            Category        @relation(fields: [categoryId], references: [id])
-    categoryId          String
+    category            VehicleCategory
     subCategory         SubCategory     @relation(fields: [subCategoryId], references: [id])
     subCategoryId       String
     brand               Brand           @relation(fields: [brandId], references: [id])
@@ -143,22 +149,12 @@ model Brand {
     Vehicle     Vehicle[]
 }
 
-model Category {
-    id          String        @id @default(uuid())
-    title       String
-    description String
-    logo        String?
-    SubCategory SubCategory[]
-    Vehicle     Vehicle[]
-}
-
 model SubCategory {
-    id          String    @id @default(uuid())
+    id          String          @id @default(uuid())
     title       String
     description String
     logo        String?
-    category    Category  @relation(fields: [categoryId], references: [id])
-    categoryId  String
+    category    VehicleCategory
     Vehicle     Vehicle[]
 }
 

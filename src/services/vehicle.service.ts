@@ -1,48 +1,13 @@
 import {
     AddBrandSchema,
-    AddCategorySchema,
     AddSubCategorySchema,
     AddVehicleSchema,
     UpdateBrandSchema,
-    UpdateCategorySchema,
     UpdateSubCategorySchema,
 } from "../schemas/vehicle.schema";
 import { calculateDistance } from "../utils/calculate_distance";
 import { prisma } from "../utils/db";
 import config from "../config/env";
-import { CustomError } from "../utils/custom_error";
-
-export async function addCategory(categoryDetails: AddCategorySchema) {
-    const category = await prisma.category.create({
-        data: categoryDetails,
-    });
-    return { msg: "Category added", result: category };
-}
-
-export async function updateCategory(
-    id: string,
-    categoryDetails: UpdateCategorySchema["body"],
-) {
-    await prisma.category.update({
-        where: { id },
-        data: categoryDetails,
-    });
-    return { msg: "Category updated" };
-}
-
-export async function listAllCategory() {
-    const category = await prisma.category.findMany();
-    return { msg: "ALl Category Fetched", result: category };
-}
-
-export async function deleteCategory(id: string) {
-    await prisma.category.delete({
-        where: {
-            id: id,
-        },
-    });
-    return { msg: "Category Deleted" };
-}
 
 export async function addSubCategory(subCategoryDetails: AddSubCategorySchema) {
     const subCategory = await prisma.subCategory.create({
@@ -74,18 +39,6 @@ export async function deleteSubCategory(id: string) {
         },
     });
     return { msg: "Sub-Category Deleted" };
-}
-
-export async function findSubCategoryFromCategory(categoryId: string) {
-    const subCategory = await prisma.subCategory.findMany({
-        where: {
-            categoryId,
-        },
-    });
-
-    if (!subCategory) throw new CustomError(400, "No Sub Category Found");
-
-    return { msg: "Sub Categories Fetched", result: subCategory };
 }
 
 export async function addBrand(brandDetails: AddBrandSchema) {
@@ -127,7 +80,7 @@ export async function addVehicle(
     const {
         title,
         type,
-        categoryId,
+        category,
         subCategoryId,
         brandId,
         model,
@@ -148,8 +101,8 @@ export async function addVehicle(
         data: {
             title,
             addedById: loggedInUser.id,
+            category,
             type,
-            categoryId,
             subCategoryId,
             brandId,
             model,
@@ -181,12 +134,7 @@ export async function listAllVehicle() {
             title: true,
             addedById: true,
             type: true,
-            category: {
-                select: {
-                    id: true,
-                    title: true,
-                },
-            },
+            category: true,
             subCategory: {
                 select: {
                     id: true,
@@ -225,12 +173,7 @@ export async function getVehiclesNearMe(lat: number, lon: number) {
             title: true,
             addedById: true,
             type: true,
-            category: {
-                select: {
-                    id: true,
-                    title: true,
-                },
-            },
+            category: true,
             subCategory: {
                 select: {
                     id: true,

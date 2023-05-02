@@ -1,55 +1,5 @@
 import { z, TypeOf } from "zod";
 
-export const addCategorySchema = z.object({
-    body: z.object({
-        title: z.string({
-            required_error: "Title is required",
-            invalid_type_error: "Title must be a string",
-        }),
-
-        description: z.string({
-            required_error: "Description is required",
-            invalid_type_error: "Description must be a string",
-        }),
-
-        logo: z
-            .string({
-                invalid_type_error: "Invalid Logo",
-            })
-            .optional(),
-    }),
-});
-
-export const updateCategorySchema = z.object({
-    params: z.object({
-        categoryId: z.string({
-            required_error: "Category must be provided",
-            invalid_type_error: "Category must be provided",
-        }),
-    }),
-    body: z.object({
-        title: z
-            .string({
-                required_error: "Title is required",
-                invalid_type_error: "Title must be a string",
-            })
-            .optional(),
-
-        description: z
-            .string({
-                required_error: "Description is required",
-                invalid_type_error: "Description must be a string",
-            })
-            .optional(),
-
-        logo: z
-            .string({
-                invalid_type_error: "Invalid Logo",
-            })
-            .optional(),
-    }),
-});
-
 export const addSubCategorySchema = z.object({
     body: z.object({
         title: z.string({
@@ -68,10 +18,7 @@ export const addSubCategorySchema = z.object({
             })
             .optional(),
 
-        categoryId: z.string({
-            required_error: "Category must be provided",
-            invalid_type_error: "Category must be provided",
-        }),
+        category: z.enum(["car", "bike", "scooter", "bicycle"]),
     }),
 });
 
@@ -102,11 +49,7 @@ export const updateSubCategorySchema = z.object({
             })
             .optional(),
 
-        categoryId: z
-            .string({
-                invalid_type_error: "Category Id must be a string",
-            })
-            .optional(),
+        category: z.enum(["car", "bike", "scooter", "bicycle"]).optional(),
     }),
 });
 
@@ -202,10 +145,7 @@ export const addVehicleSchema = z.object({
 
         type: z.enum(["electric", "petrol", "diesel"]),
 
-        categoryId: z.string({
-            required_error: "categoryId is required",
-            invalid_type_error: "categoryId must be a string",
-        }),
+        category: z.enum(["car", "bike", "scooter", "bicycle"]),
 
         subCategoryId: z.string({
             required_error: "subCategoryId is required",
@@ -283,8 +223,6 @@ export const addVehicleSchema = z.object({
 });
 
 export type AddVehicleSchema = TypeOf<typeof addVehicleSchema>["body"];
-export type AddCategorySchema = TypeOf<typeof addCategorySchema>["body"];
-export type UpdateCategorySchema = TypeOf<typeof updateCategorySchema>;
 export type AddSubCategorySchema = TypeOf<typeof addSubCategorySchema>["body"];
 export type UpdateSubCategorySchema = TypeOf<typeof updateSubCategorySchema>;
 export type AddBrandSchema = TypeOf<typeof addBrandSchema>["body"];

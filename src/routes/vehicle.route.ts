@@ -5,42 +5,16 @@ import { verifyInput } from "../middlewares/verifyinput.middleware";
 import * as VehicleController from "../controllers/vehicle.controller";
 import {
     addBrandSchema,
-    addCategorySchema,
     addSubCategorySchema,
     addVehicleSchema,
     updateBrandSchema,
-    updateCategorySchema,
     updateSubCategorySchema,
 } from "../schemas/vehicle.schema";
 import { isAdmin } from "../middlewares/auth.middleware";
 
 const router = Router();
 
-router.get("/category", VehicleController.listAllCategoryController);
-router.post(
-    "/category",
-    isAdmin,
-    verifyInput(addCategorySchema),
-    VehicleController.addCategoryController,
-);
-router.patch(
-    "/category/:id",
-    isAdmin,
-    verifyInput(updateCategorySchema),
-    VehicleController.updateCategoryController,
-);
-router.delete(
-    "/category/:id",
-    isAdmin,
-    VehicleController.deleteCategoryController,
-);
-
 router.get("/subcategory", VehicleController.listAllSubCategoryController);
-//note: To file subcategory by category
-router.get(
-    "/subcategory/findbycategory/:id", //note: here id is categoryId
-    VehicleController.findSubCategoryFromCategoryController,
-);
 router.post(
     "/subcategory",
     isAdmin,
