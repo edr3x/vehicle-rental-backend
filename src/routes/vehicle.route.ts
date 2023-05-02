@@ -12,21 +12,19 @@ import {
     updateCategorySchema,
     updateSubCategorySchema,
 } from "../schemas/vehicle.schema";
-import { isAdmin, isMod } from "../middlewares/auth.middleware";
+import { isAdmin } from "../middlewares/auth.middleware";
 
 const router = Router();
 
 router.get("/category", VehicleController.listAllCategoryController);
 router.post(
     "/category",
-    isMod,
     isAdmin,
     verifyInput(addCategorySchema),
     VehicleController.addCategoryController,
 );
 router.patch(
     "/category/:id",
-    isMod,
     isAdmin,
     verifyInput(updateCategorySchema),
     VehicleController.updateCategoryController,
@@ -45,14 +43,12 @@ router.get(
 );
 router.post(
     "/subcategory",
-    isMod,
     isAdmin,
     verifyInput(addSubCategorySchema),
     VehicleController.addSubCategoryController,
 );
 router.patch(
     "/subcategory/:id",
-    isMod,
     isAdmin,
     verifyInput(updateSubCategorySchema),
     VehicleController.updateSubCategoryController,
@@ -66,14 +62,12 @@ router.delete(
 router.get("/brand", VehicleController.listAllBrandController);
 router.post(
     "/brand",
-    isMod,
     isAdmin,
     verifyInput(addBrandSchema),
     VehicleController.addBrandController,
 );
 router.patch(
     "/brand/:id",
-    isMod,
     isAdmin,
     verifyInput(updateBrandSchema),
     VehicleController.updateBrandController,

@@ -33,27 +33,10 @@ export const isLoggedIn = (req: Request, res: Response, next: NextFunction) => {
 //note: RBAC middleware
 export const isDriver = (_req: Request, res: Response, next: NextFunction) => {
     try {
-        const user = res.locals.user;
-
         if (
-            user.role !== "driver" ||
-            user.role !== "moderator" ||
-            user.role !== "admin"
+            res.locals.user.role !== "driver" ||
+            res.locals.user.role !== "admin"
         ) {
-            throw new CustomError(403, "Forbidden");
-        }
-
-        next();
-    } catch (error: any) {
-        throw new CustomError(403, "Forbidden");
-    }
-};
-
-export const isMod = (_req: Request, res: Response, next: NextFunction) => {
-    try {
-        const user = res.locals.user;
-
-        if (user.role !== "moderator" || user.role !== "admin") {
             throw new CustomError(403, "Forbidden");
         }
 
@@ -65,9 +48,9 @@ export const isMod = (_req: Request, res: Response, next: NextFunction) => {
 
 export const isAdmin = (_req: Request, res: Response, next: NextFunction) => {
     try {
-        const user = res.locals.user;
-
-        if (user.role !== "admin") throw new CustomError(403, "Forbidden");
+        if (res.locals.user.role !== "admin") {
+            throw new CustomError(403, "Forbidden");
+        }
 
         next();
     } catch (error: any) {
