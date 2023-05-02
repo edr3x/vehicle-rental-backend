@@ -237,8 +237,8 @@ export async function getVehiclesNearMeController(
     next: NextFunction,
 ) {
     try {
-        const lat = parseInt(req.query.lat as string);
-        const lon = parseInt(req.query.lon as string);
+        const lat = parseFloat(req.query.lat as string);
+        const lon = parseFloat(req.query.lon as string);
 
         const response = await VehicleService.getVehiclesNearMe(lat, lon);
 
