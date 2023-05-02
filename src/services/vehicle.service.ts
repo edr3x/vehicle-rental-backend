@@ -10,6 +10,7 @@ import {
 import { calculateDistance } from "../utils/calculate_distance";
 import { prisma } from "../utils/db";
 import config from "../config/env";
+import { CustomError } from "../utils/custom_error";
 
 export async function addCategory(categoryDetails: AddCategorySchema) {
     const category = await prisma.category.create({
@@ -81,6 +82,9 @@ export async function findSubCategoryFromCategory(categoryId: string) {
             categoryId,
         },
     });
+
+    if (!subCategory) throw new CustomError(400, "No Sub Category Found");
+
     return { msg: "Sub Categories Fetched", result: subCategory };
 }
 

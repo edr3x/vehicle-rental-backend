@@ -232,15 +232,16 @@ export async function listAllVehicleController(
 }
 
 export async function getVehiclesNearMeController(
-    req: Request<{}, {}, { lat: number; lon: number }>,
+    req: Request,
     res: Response,
     next: NextFunction,
 ) {
     try {
-        const response = await VehicleService.getVehiclesNearMe(
-            req.body.lat,
-            req.body.lon,
-        );
+        const lat = parseInt(req.query.lat as string);
+        const lon = parseInt(req.query.lon as string);
+
+        const response = await VehicleService.getVehiclesNearMe(lat, lon);
+
         return res.status(201).json({ success: true, data: response });
     } catch (e: any) {
         next(e);
