@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import {
+    updateBrandLogo,
     updateLicensePic,
     updateProfilePic as updateProfilePicService,
     uploadService,
@@ -58,6 +59,22 @@ export async function updateLicensePicController(
         );
 
         return res.status(201).json({ success: true, data: response });
+    } catch (e: any) {
+        next(e);
+    }
+}
+
+export async function updateBrandLogoController(
+    req: Request<{ id: string }, {}, { image: any }>,
+    res: Response,
+    next: NextFunction,
+) {
+    try {
+        let image = req.file as MulterFile | undefined;
+
+        const response = await updateBrandLogo(image?.filename, req.params.id);
+
+        return res.status(200).json({ success: true, data: response });
     } catch (e: any) {
         next(e);
     }

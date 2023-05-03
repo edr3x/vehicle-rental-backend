@@ -40,3 +40,17 @@ export async function updateLicensePic(image: any, loggedInUser: any) {
         image: upload.licensePic,
     };
 }
+
+export async function updateBrandLogo(image: any, brandId: string) {
+    const upload = await prisma.brand.update({
+        where: { id: brandId },
+        data: {
+            logo: image,
+        },
+    });
+
+    return {
+        message: "Brand Logo Picture Updated Successfully",
+        image: upload.logo,
+    };
+}
