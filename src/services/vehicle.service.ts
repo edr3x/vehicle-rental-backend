@@ -85,43 +85,38 @@ export async function addVehicle(
         subCategoryId,
         brandId,
         model,
-        thumbnail,
         images,
-        bluebookPics,
         vehicleNumber,
         description,
         rentGuidelines,
         rate,
         pickupAddress,
         driveTrain,
-        insurancePaperPhoto,
         features,
     } = vehicleDetails;
 
     const vehicle = await prisma.vehicle.create({
         data: {
-            title,
             addedById: loggedInUser.id,
+            title,
             category,
             type,
             subCategoryId,
             brandId,
             model,
-            thumbnail,
             images,
-            bluebookPics,
             vehicleNumber,
             description,
             rentGuidelines,
             rate,
             pickupAddress,
             driveTrain,
-            insurancePaperPhoto,
             features: {
                 create: features,
             },
         },
     });
+
     return { msg: "Vehicle added", result: vehicle };
 }
 

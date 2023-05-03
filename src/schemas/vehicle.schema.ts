@@ -172,14 +172,16 @@ export const addVehicleSchema = z.object({
                 required_error: "Images is required",
                 invalid_type_error: "Image is invalid",
             })
-            .array(),
+            .array()
+            .optional(),
 
         bluebookPics: z
             .string({
                 required_error: "Bluebook Images is required",
                 invalid_type_error: "Bluebook Image is invalid",
             })
-            .array(),
+            .array()
+            .optional(),
 
         vehicleNumber: z.string({
             required_error: "Vehicle Number is required",
@@ -213,10 +215,12 @@ export const addVehicleSchema = z.object({
             "allWheel",
         ]),
 
-        insurancePaperPhoto: z.string({
-            required_error: "Insurance Photo is required",
-            invalid_type_error: "Insurance Photo is invalid",
-        }),
+        insurancePaperPhoto: z
+            .string({
+                required_error: "Insurance Photo is required",
+                invalid_type_error: "Insurance Photo is invalid",
+            })
+            .optional(),
 
         features: vehicleFeatureSchema,
     }),
