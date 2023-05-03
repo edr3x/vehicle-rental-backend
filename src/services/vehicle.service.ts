@@ -2,6 +2,7 @@ import {
     AddBrandSchema,
     AddSubCategorySchema,
     AddVehicleSchema,
+    FindVehicleNearMeSchema,
     UpdateBrandSchema,
     UpdateSubCategorySchema,
 } from "../schemas/vehicle.schema";
@@ -163,15 +164,16 @@ export async function listAllVehicle() {
     return { msg: "Vehicles fetched", result: vehicles };
 }
 
-export async function getVehiclesNearMe(
-    lat: number,
-    lon: number,
-    category?: "car" | "bike" | "scooter" | "bicycle",
-) {
+export async function getVehiclesNearMe(qureyParams: FindVehicleNearMeSchema) {
+    const category = qureyParams.category;
+
+    const lat = parseFloat(qureyParams.lat);
+    const lon = parseFloat(qureyParams.lon);
+
     const whereClause =
-        category !== undefined
-            ? { isVerified: true, category }
-            : { isVerified: true };
+        category === undefined
+            ? { isVerified: true }
+            : { isVerified: true, category };
 
     const allVehicles = await prisma.vehicle.findMany({
         where: whereClause,

@@ -5,6 +5,7 @@ import {
     AddBrandSchema,
     AddSubCategorySchema,
     AddVehicleSchema,
+    FindVehicleNearMeSchema,
     UpdateBrandSchema,
     UpdateSubCategorySchema,
 } from "../schemas/vehicle.schema";
@@ -152,23 +153,13 @@ export async function listAllVehicleController(
     }
 }
 
-type VehicleCategoryType = "car" | "bike" | "scooter" | "bicycle";
-
 export async function getVehiclesNearMeController(
-    req: Request,
+    req: Request<{}, {}, {}, FindVehicleNearMeSchema>,
     res: Response,
     next: NextFunction,
 ) {
     try {
-        const lat = parseFloat(req.query.lat as string);
-        const lon = parseFloat(req.query.lon as string);
-        const category = req.query.category as VehicleCategoryType;
-
-        const response = await VehicleService.getVehiclesNearMe(
-            lat,
-            lon,
-            category,
-        );
+        const response = await VehicleService.getVehiclesNearMe(req.query);
 
         return res.status(201).json({ success: true, data: response });
     } catch (e: any) {
