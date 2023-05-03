@@ -107,7 +107,6 @@ enum DriveTrain {
 enum VehicleCategory {
     car
     bike
-    scooter
     bicycle
 }
 

@@ -239,7 +239,7 @@ export const findNearSchema = z.object({
             required_error: "Longitude is required",
             invalid_type_error: "Longitude must be a string",
         }),
-        category: z.enum(["car", "bike", "scooter", "bicycle"]).optional(),
+        category: z.enum(["all", "car", "bike", "bicycle"]),
     }),
 });
 

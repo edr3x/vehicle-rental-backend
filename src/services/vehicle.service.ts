@@ -196,7 +196,7 @@ export async function getVehiclesNearMe(inputValues: FindVehicleNearMeSchema) {
     const category = inputValues.category;
 
     const whereClause =
-        category === undefined
+        category === "all"
             ? { isVerified: true }
             : { isVerified: true, category };
 
@@ -208,6 +208,7 @@ export async function getVehiclesNearMe(inputValues: FindVehicleNearMeSchema) {
             addedById: true,
             type: true,
             category: true,
+            rate: true,
             subCategory: {
                 select: {
                     id: true,
