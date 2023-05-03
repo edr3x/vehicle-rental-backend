@@ -222,8 +222,26 @@ export const addVehicleSchema = z.object({
     }),
 });
 
+export const findNearSchema = z.object({
+    query: z.object({
+        lat: z.string({
+            required_error: "Latitude is required",
+            invalid_type_error: "Latitude must be a string",
+        }),
+        lon: z.string({
+            required_error: "Longitude is required",
+            invalid_type_error: "Longitude must be a string",
+        }),
+        category: z.string({
+            required_error: "Category is required",
+            invalid_type_error: "Category must be a string",
+        }),
+    }),
+});
+
 export type AddVehicleSchema = TypeOf<typeof addVehicleSchema>["body"];
 export type AddSubCategorySchema = TypeOf<typeof addSubCategorySchema>["body"];
 export type UpdateSubCategorySchema = TypeOf<typeof updateSubCategorySchema>;
 export type AddBrandSchema = TypeOf<typeof addBrandSchema>["body"];
 export type UpdateBrandSchema = TypeOf<typeof updateBrandSchema>;
+export type FindVehicleNearMeSchema = TypeOf<typeof findNearSchema>["query"];

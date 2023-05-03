@@ -152,6 +152,8 @@ export async function listAllVehicleController(
     }
 }
 
+type VehicleCategoryType = "car" | "bike" | "scooter" | "bicycle";
+
 export async function getVehiclesNearMeController(
     req: Request,
     res: Response,
@@ -160,8 +162,13 @@ export async function getVehiclesNearMeController(
     try {
         const lat = parseFloat(req.query.lat as string);
         const lon = parseFloat(req.query.lon as string);
+        const category = req.query.category as VehicleCategoryType;
 
-        const response = await VehicleService.getVehiclesNearMe(lat, lon);
+        const response = await VehicleService.getVehiclesNearMe(
+            lat,
+            lon,
+            category,
+        );
 
         return res.status(201).json({ success: true, data: response });
     } catch (e: any) {

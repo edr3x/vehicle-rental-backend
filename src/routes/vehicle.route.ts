@@ -7,6 +7,7 @@ import {
     addBrandSchema,
     addSubCategorySchema,
     addVehicleSchema,
+    findNearSchema,
     updateBrandSchema,
     updateSubCategorySchema,
 } from "../schemas/vehicle.schema";
@@ -54,6 +55,10 @@ router.post(
     verifyInput(addVehicleSchema),
     VehicleController.addVehicleController,
 );
-router.get("/nearme", VehicleController.getVehiclesNearMeController);
+router.get(
+    "/nearme",
+    verifyInput(findNearSchema),
+    VehicleController.getVehiclesNearMeController,
+);
 
 export default router;

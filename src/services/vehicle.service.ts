@@ -163,11 +163,18 @@ export async function listAllVehicle() {
     return { msg: "Vehicles fetched", result: vehicles };
 }
 
-export async function getVehiclesNearMe(lat: number, lon: number) {
-    let allVehicles = await prisma.vehicle.findMany({
-        where: {
-            isVerified: true,
-        },
+export async function getVehiclesNearMe(
+    lat: number,
+    lon: number,
+    category?: "car" | "bike" | "scooter" | "bicycle",
+) {
+    const whereClause =
+        category !== undefined
+            ? { isVerified: true, category }
+            : { isVerified: true };
+
+    const allVehicles = await prisma.vehicle.findMany({
+        where: whereClause,
         select: {
             id: true,
             title: true,
