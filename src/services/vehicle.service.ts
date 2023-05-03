@@ -193,7 +193,6 @@ export async function getVehiclesNearMe(qureyParams: FindVehicleNearMeSchema) {
                 select: {
                     id: true,
                     title: true,
-                    logo: true,
                 },
             },
             model: true,
@@ -218,16 +217,8 @@ export async function getVehiclesNearMe(qureyParams: FindVehicleNearMeSchema) {
             distance,
         };
 
-        if (distance <= 15) {
-            newArr.push(newVehicleList);
-        }
+        if (distance <= 15) newArr.push(newVehicleList);
     }
-
-    newArr.map((vehicle) => {
-        vehicle.thumbnail = `${config.HOST}/image/${vehicle.thumbnail}`;
-        vehicle.brand.logo = `${config.HOST}/image/${vehicle.brand.logo}`;
-        return vehicle;
-    });
 
     return { msg: "Vehicles near me fetched", result: newArr };
 }
