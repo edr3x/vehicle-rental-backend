@@ -153,13 +153,28 @@ export async function listAllVehicleController(
     }
 }
 
-export async function getVehiclesNearMeController(
-    req: Request<{}, {}, {}, FindVehicleNearMeSchema>,
+export async function getVehiclesDetails(
+    req: Request,
     res: Response,
     next: NextFunction,
 ) {
     try {
-        const response = await VehicleService.getVehiclesNearMe(req.query);
+        const response = await VehicleService.getVehicleDetailsService(
+            req.params.id,
+        );
+        return res.status(201).json({ success: true, data: response });
+    } catch (e: any) {
+        next(e);
+    }
+}
+
+export async function getVehiclesNearMeController(
+    req: Request<{}, {}, FindVehicleNearMeSchema>,
+    res: Response,
+    next: NextFunction,
+) {
+    try {
+        const response = await VehicleService.getVehiclesNearMe(req.body);
 
         return res.status(201).json({ success: true, data: response });
     } catch (e: any) {

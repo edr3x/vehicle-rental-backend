@@ -50,12 +50,13 @@ router.patch(
 router.delete("/brand/:id", isAdmin, VehicleController.deleteBrandController);
 
 router.get("/", VehicleController.listAllVehicleController);
+router.get("/:id", VehicleController.getVehiclesDetails);
 router.post(
     "/",
     verifyInput(addVehicleSchema),
     VehicleController.addVehicleController,
 );
-router.get(
+router.post(
     "/nearme",
     verifyInput(findNearSchema),
     VehicleController.getVehiclesNearMeController,

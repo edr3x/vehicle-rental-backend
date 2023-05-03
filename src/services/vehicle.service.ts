@@ -9,6 +9,7 @@ import {
 import { calculateDistance } from "../utils/calculate_distance";
 import { prisma } from "../utils/db";
 import config from "../config/env";
+import { CustomError } from "../utils/custom_error";
 
 export async function addSubCategory(subCategoryDetails: AddSubCategorySchema) {
     const subCategory = await prisma.subCategory.create({
@@ -150,20 +151,49 @@ export async function listAllVehicle() {
         },
     });
 
-    vehicles.map((vehicle) => {
-        vehicle.thumbnail = `${config.HOST}/image/${vehicle.thumbnail}`;
-        vehicle.brand.logo = `${config.HOST}/image/${vehicle.brand.logo}`;
-        return vehicle;
-    });
-
     return { msg: "Vehicles fetched", result: vehicles };
 }
 
-export async function getVehiclesNearMe(qureyParams: FindVehicleNearMeSchema) {
-    const category = qureyParams.category;
+export async function getVehicleDetailsService(id: string) {
+    const vehicle = await prisma.vehicle.findUnique({
+        where: { id },
+        select: {
+            id: true,
+            title: true,
+            addedById: true,
+            type: true,
+            category: true,
+            subCategory: {
+                select: {
+                    id: true,
+                    title: true,
+                },
+            },
+            brand: {
+                select: {
+                    id: true,
+                    title: true,
+                },
+            },
+            model: true,
+            images: true,
+            vehicleNumber: true,
+            description: true,
+            rentGuidelines: true,
+            rate: true,
+            pickupAddress: true,
+            driveTrain: true,
+            features: true,
+        },
+    });
 
-    const lat = parseFloat(qureyParams.lat);
-    const lon = parseFloat(qureyParams.lon);
+    if (!vehicle) throw new CustomError(404, "Vehicle not found");
+
+    return { msg: "Vehicl details fetched", result: vehicle };
+}
+
+export async function getVehiclesNearMe(inputValues: FindVehicleNearMeSchema) {
+    const category = inputValues.category;
 
     const whereClause =
         category === undefined
@@ -198,6 +228,9 @@ export async function getVehiclesNearMe(qureyParams: FindVehicleNearMeSchema) {
     });
 
     let newArr: Array<any> = [];
+
+    const lat = parseFloat(inputValues.lat);
+    const lon = parseFloat(inputValues.lon);
 
     for (let i = 0; i < allVehicles.length; i++) {
         const distance = calculateDistance(

@@ -203,10 +203,13 @@ export const addVehicleSchema = z.object({
             invalid_type_error: "Rate must be a /hr or /day",
         }),
 
-        pickupAddress: z.string({
-            required_error: "Pickup Address is required",
-            invalid_type_error: "Pickup Address must be a string",
-        }),
+        pickupAddress: z
+            .string({
+                required_error: "Pickup Address is required",
+                invalid_type_error: "Pickup Address must be a string",
+            })
+            .array()
+            .length(2),
 
         driveTrain: z.enum([
             "frontWheel",
@@ -227,7 +230,7 @@ export const addVehicleSchema = z.object({
 });
 
 export const findNearSchema = z.object({
-    query: z.object({
+    body: z.object({
         lat: z.string({
             required_error: "Latitude is required",
             invalid_type_error: "Latitude must be a string",
@@ -245,4 +248,4 @@ export type AddSubCategorySchema = TypeOf<typeof addSubCategorySchema>["body"];
 export type UpdateSubCategorySchema = TypeOf<typeof updateSubCategorySchema>;
 export type AddBrandSchema = TypeOf<typeof addBrandSchema>["body"];
 export type UpdateBrandSchema = TypeOf<typeof updateBrandSchema>;
-export type FindVehicleNearMeSchema = TypeOf<typeof findNearSchema>["query"];
+export type FindVehicleNearMeSchema = TypeOf<typeof findNearSchema>["body"];
