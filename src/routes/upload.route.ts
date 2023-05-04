@@ -24,4 +24,10 @@ router.patch(
 
 router.patch("/license", uploader.single("image"), updateLicensePicController);
 
+router.patch(
+    "/vehicle/thumbnail/:id",
+    uploader.single("image"),
+    updateBrandLogoController,
+);
+
 export default router;

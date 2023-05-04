@@ -3,6 +3,7 @@ import {
     updateBrandLogo,
     updateLicensePic,
     updateProfilePic as updateProfilePicService,
+    updateVehicleThumbnail,
     uploadService,
 } from "../services/upload.service";
 
@@ -73,6 +74,26 @@ export async function updateBrandLogoController(
         let image = req.file as MulterFile | undefined;
 
         const response = await updateBrandLogo(image?.filename, req.params.id);
+
+        return res.status(200).json({ success: true, data: response });
+    } catch (e: any) {
+        next(e);
+    }
+}
+
+export async function updateVehicleThumbnailController(
+    req: Request<{ id: string }, {}, { image: any }>,
+    res: Response,
+    next: NextFunction,
+) {
+    try {
+        let image = req.file as MulterFile | undefined;
+
+        const response = await updateVehicleThumbnail(
+            image?.filename,
+            req.params.id,
+            res.locals.user,
+        );
 
         return res.status(200).json({ success: true, data: response });
     } catch (e: any) {

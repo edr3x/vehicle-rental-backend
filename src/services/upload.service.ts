@@ -1,3 +1,4 @@
+import { CustomError } from "../utils/custom_error";
 import { prisma } from "../utils/db";
 
 export async function uploadService(images: any, loggedInUser: any) {
@@ -52,5 +53,30 @@ export async function updateBrandLogo(image: any, brandId: string) {
     return {
         message: "Brand Logo Picture Updated Successfully",
         image: upload.logo,
+    };
+}
+
+export async function updateVehicleThumbnail(
+    image: any,
+    vehicleId: string,
+    loggedInUser: any,
+) {
+    const upload = await prisma.vehicle.updateMany({
+        where: {
+            AND: {
+                id: vehicleId,
+                addedById: loggedInUser.id,
+            },
+        },
+        data: {
+            thumbnail: image,
+        },
+    });
+
+    if (!upload) throw new CustomError(400, "Vehicle Thumbnail Not Updated");
+
+    return {
+        message: "Vehicle Thumbnail Updated Successfully",
+        data: upload,
     };
 }
