@@ -160,9 +160,17 @@ export async function getVehicleDetailsService(id: string) {
         select: {
             id: true,
             title: true,
-            addedById: true,
+            addedBy: {
+                select: {
+                    id: true,
+                    phone: true,
+                    profileImage: true,
+                    fullName: true,
+                },
+            },
             type: true,
             category: true,
+            thumbnail: true,
             subCategory: {
                 select: {
                     id: true,
@@ -173,6 +181,7 @@ export async function getVehicleDetailsService(id: string) {
                 select: {
                     id: true,
                     title: true,
+                    logo: true,
                 },
             },
             model: true,
@@ -189,7 +198,16 @@ export async function getVehicleDetailsService(id: string) {
 
     if (!vehicle) throw new CustomError(404, "Vehicle not found");
 
-    return { msg: "Vehicl details fetched", result: vehicle };
+    return {
+        msg: "Vehicle details fetched",
+        result: {
+            ...vehicle,
+            addedBy: {
+                ...vehicle.addedBy,
+                phone: Number(vehicle.addedBy.phone),
+            },
+        },
+    };
 }
 
 export async function getVehiclesNearMe(inputValues: FindVehicleNearMeSchema) {
