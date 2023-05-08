@@ -18,7 +18,7 @@ export const addSubCategorySchema = z.object({
             })
             .optional(),
 
-        category: z.enum(["car", "bike", "scooter", "bicycle"]),
+        category: z.enum(["car", "bike", "bicycle"]),
     }),
 });
 
@@ -49,7 +49,7 @@ export const updateSubCategorySchema = z.object({
             })
             .optional(),
 
-        category: z.enum(["car", "bike", "scooter", "bicycle"]).optional(),
+        category: z.enum(["car", "bike", "bicycle"]).optional(),
     }),
 });
 
@@ -145,7 +145,7 @@ export const addVehicleSchema = z.object({
 
         type: z.enum(["electric", "petrol", "diesel"]),
 
-        category: z.enum(["car", "bike", "scooter", "bicycle"]),
+        category: z.enum(["car", "bike", "bicycle"]),
 
         subCategoryId: z.string({
             required_error: "subCategoryId is required",

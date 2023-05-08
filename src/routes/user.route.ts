@@ -13,8 +13,6 @@ import { isAdmin } from "../middlewares/auth.middleware";
 
 const router = Router();
 
-router.get("/verifymail", UserController.verifyEmailController);
-
 router.get("/profile", UserController.getUserController);
 
 router.get("/all", isAdmin, UserController.getAllUsersController);

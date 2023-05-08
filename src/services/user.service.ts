@@ -1,3 +1,5 @@
+import { v4 as uuidv4 } from "uuid";
+
 import { prisma } from "../utils/db";
 import { CustomError } from "../utils/custom_error";
 
@@ -28,11 +30,6 @@ export async function getAllUserService() {
     }
 
     return response;
-}
-
-export async function verifyEmailService(code: string, mail: string) {
-    console.log("verify function triggerd");
-    console.log(code, mail);
 }
 
 export async function getUserService(locaUserData: any) {
@@ -112,11 +109,32 @@ export async function updateUserService(
         },
     });
 
-    // await sendVerificationEmail({
-    //     toEmail: email,
-    //     code: "123",
-    //     subject: "Verify your email",
-    // });
+    const verifyCode = uuidv4();
+
+    const isotpEmail = await prisma.otp.findUnique({ where: { email } });
+    if (isotpEmail) {
+        await prisma.otp.update({
+            where: {
+                email,
+            },
+            data: {
+                emailOtp: verifyCode,
+            },
+        });
+    } else {
+        await prisma.otp.create({
+            data: {
+                emailOtp: verifyCode,
+                email,
+            },
+        });
+    }
+
+    await sendVerificationEmail({
+        toEmail: email,
+        code: verifyCode,
+        subject: "Verify your email",
+    });
 
     return {
         fullName: user.fullName,

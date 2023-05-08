@@ -1,6 +1,10 @@
 import { NextFunction, Request, Response } from "express";
 
-import { sendOTP, verifyOTP } from "../services/auth.service";
+import {
+    sendOTP,
+    verifyEmailService,
+    verifyOTP,
+} from "../services/auth.service";
 import { SendOTPSchema, VerifyOTPSchema } from "../schemas/auth.schema";
 
 export async function sendOTPController(
@@ -28,6 +32,23 @@ export async function verifyOTPController(
         const response = await verifyOTP(phone, code);
 
         return res.status(201).json({ success: true, data: response });
+    } catch (e: any) {
+        next(e);
+    }
+}
+
+export async function verifyEmailController(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+) {
+    try {
+        const code = req.query.code as string;
+        const email = req.query.email as string;
+
+        const response = await verifyEmailService(code, email);
+
+        return res.status(200).json({ success: true, data: response });
     } catch (e: any) {
         next(e);
     }

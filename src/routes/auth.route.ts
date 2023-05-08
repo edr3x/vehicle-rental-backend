@@ -24,4 +24,6 @@ router.post(
     AuthController.verifyDriverOTP,
 );
 
+router.get("/verifymail", AuthController.verifyEmailController);
+
 export default router;

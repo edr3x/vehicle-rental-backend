@@ -152,19 +152,46 @@ export async function verifyOTP(
     };
 }
 
-export async function deleteOtp() {
-    try {
-        const currentTime = new Date();
-        const cutoffTime = new Date(currentTime.getTime() - 180000);
+export async function verifyEmailService(code: string, email: string) {
+    const isValid = await prisma.otp.findUnique({
+        where: { email },
+    });
 
-        await prisma.otp.deleteMany({
-            where: {
-                updatedAt: {
-                    lt: cutoffTime,
-                },
-            },
-        });
-    } catch (e) {
-        logger.error(e);
+    if (!isValid) {
+        throw new CustomError(400, "Invalid email");
     }
+
+    if (isValid.emailOtp !== code) {
+        throw new CustomError(402, "Validation Failed");
+    }
+
+    await prisma.$transaction([
+        prisma.user.update({
+            where: { email },
+            data: {
+                emailVerified: true,
+            },
+        }),
+        prisma.otp.delete({
+            where: { email },
+        }),
+    ]);
+
+    return "Email verified successfully";
+}
+
+export async function deleteOtp() {
+    // try {
+    //     const currentTime = new Date();
+    //     const cutoffTime = new Date(currentTime.getTime() - 180000);
+    //     await prisma.otp.deleteMany({
+    //         where: {
+    //             updatedAt: {
+    //                 lt: cutoffTime,
+    //             },
+    //         },
+    //     });
+    // } catch (e) {
+    //     logger.error(e);
+    // }
 }
