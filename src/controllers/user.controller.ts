@@ -15,7 +15,25 @@ import {
     updateAddressService,
     updateLicenseDetailsService,
     updateUserService,
+    verifyEmailService,
 } from "../services/user.service";
+
+export async function verifyEmailController(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+) {
+    try {
+        const code = req.query.code as string;
+        const email = req.query.email as string;
+
+        const response = await verifyEmailService(code, email);
+
+        return res.status(200).json({ success: true, data: response });
+    } catch (e: any) {
+        next(e);
+    }
+}
 
 export async function getUserController(
     _req: Request,

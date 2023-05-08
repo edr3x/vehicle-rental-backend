@@ -7,6 +7,7 @@ import {
     UpdateLicenseSchema,
     UpdateUserSchema,
 } from "../schemas/user.schema";
+import { sendVerificationEmail } from "../utils/mailer";
 
 export async function getAllUserService() {
     const users = await prisma.user.findMany({
@@ -27,6 +28,11 @@ export async function getAllUserService() {
     }
 
     return response;
+}
+
+export async function verifyEmailService(code: string, mail: string) {
+    console.log("verify function triggerd");
+    console.log(code, mail);
 }
 
 export async function getUserService(locaUserData: any) {
@@ -105,6 +111,12 @@ export async function updateUserService(
             isProfileUpdated: true,
         },
     });
+
+    // await sendVerificationEmail({
+    //     toEmail: email,
+    //     code: "123",
+    //     subject: "Verify your email",
+    // });
 
     return {
         fullName: user.fullName,
