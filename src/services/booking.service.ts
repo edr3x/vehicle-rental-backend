@@ -37,7 +37,33 @@ export async function bookingService(
     return { msg: message };
 }
 
-export async function cancelBookingService(bokingId: string, userdata: any) {}
+export async function cancelBookingService(bookingId: string, userdata: any) {
+    const booking = await prisma.booking.findUnique({
+        where: {
+            id: bookingId,
+        },
+    });
+
+    if (!booking) throw new CustomError(404, "Booking ID Not Found");
+
+    if (booking.bookedById !== userdata.id) {
+        throw new CustomError(
+            403,
+            "You are not allowed to cancel this booking",
+        );
+    }
+
+    await prisma.booking.update({
+        where: {
+            id: bookingId,
+        },
+        data: {
+            status: "cancelled",
+        },
+    });
+
+    return { msg: "Booking Successfully Cancelled" };
+}
 
 export async function myBookingsService(userdata: any) {}
 

@@ -16,8 +16,8 @@ router.post(
 // here id is bookingID
 router.get("/cancel/:id", BookingController.cancelBookingController);
 
-router.get("/mybookings", BookingController.getMyBookingsController);
+router.get("/list", BookingController.getMyBookingsController);
 
-router.get("/bookingrequest", BookingController.myBookingRequestController);
+router.get("/request", BookingController.myBookingRequestController);
 
 export default router;
