@@ -81,7 +81,7 @@ export async function myBookingRequestController(
     }
 }
 
-export async function bookingRequestController(
+export async function bookingRequestHandlerController(
     req: Request,
     res: Response,
     next: NextFunction,
