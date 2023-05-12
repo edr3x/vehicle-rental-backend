@@ -108,6 +108,7 @@ export async function getBookingDetailsService(bookingId: string) {
             bookedBy: {
                 select: {
                     phone: true,
+                    profileImage: true,
                     fullName: true,
                     email: true,
                     address: true,
@@ -138,9 +139,27 @@ export async function myBookingRequestService(userdata: any) {
                 },
             ],
         },
+        include: {
+            bookedBy: {
+                select: {
+                    profileImage: true,
+                    fullName: true,
+                    phone: true,
+                    email: true,
+                    address: true,
+                    gender: true,
+                    drivingLicense: true,
+                },
+            },
+        },
     });
 
     return { msg: `Booking Requests fetched`, bookings };
 }
+
+export async function bookingRequestHandlerService(
+    bookingId: string,
+    userData: string,
+) {}
 
 export async function deleteExpiredBookingsService() {}

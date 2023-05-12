@@ -13,13 +13,15 @@ router.post(
     BookingController.bookVehicleController,
 );
 
+// here id is bookingID
 router.get("/details/:id", BookingController.getBookingDetails);
 
-// here id is bookingID
 router.get("/cancel/:id", BookingController.cancelBookingController);
 
 router.get("/list", BookingController.getMyBookingsController);
 
-router.get("/request", BookingController.myBookingRequestController);
+router.get("/requests", BookingController.myBookingRequestController);
+
+router.get("/requests/:id", BookingController.bookingRequestHandlerController);
 
 export default router;

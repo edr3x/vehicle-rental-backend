@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 
 import {
+    bookingRequestHandlerService,
     bookingService,
     cancelBookingService,
     getBookingDetailsService,
@@ -73,6 +74,23 @@ export async function myBookingRequestController(
 ) {
     try {
         const response = await myBookingRequestService(res.locals.user);
+
+        return res.status(200).json({ success: true, data: response });
+    } catch (e: any) {
+        next(e);
+    }
+}
+
+export async function bookingRequestController(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+) {
+    try {
+        const response = await bookingRequestHandlerService(
+            req.params.id,
+            res.locals.user,
+        );
 
         return res.status(200).json({ success: true, data: response });
     } catch (e: any) {
