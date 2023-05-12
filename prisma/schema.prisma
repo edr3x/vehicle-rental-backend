@@ -188,15 +188,24 @@ model VehicleFeature {
     fuelTank          Int          @default(4)
 }
 
+enum BookingStatus {
+    pending
+    active
+    cancelled
+    rejected
+    completed
+}
+
 model Booking {
-    id          String   @id @default(uuid())
-    Vehicle     Vehicle  @relation(fields: [vehicleId], references: [id])
+    id          String        @id @default(uuid())
+    Vehicle     Vehicle       @relation(fields: [vehicleId], references: [id])
     vehicleId   String
     startDate   DateTime
     endDate     DateTime
+    status      BookingStatus @default(pending)
     description String
-    bookedBy    User     @relation(fields: [bookedById], references: [id])
+    bookedBy    User          @relation(fields: [bookedById], references: [id])
     bookedById  String
-    createdAt   DateTime @default(now())
-    updatedAt   DateTime @updatedAt
+    createdAt   DateTime      @default(now())
+    updatedAt   DateTime      @updatedAt
 }

@@ -50,6 +50,7 @@ router.patch(
 router.delete("/brand/:id", isAdmin, VehicleController.deleteBrandController);
 
 router.get("/", VehicleController.listAllVehicleController);
+router.get("/self", VehicleController.selfPostedVehiclesController);
 router.get("/:id", VehicleController.getVehiclesDetails);
 router.post(
     "/",

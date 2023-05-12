@@ -153,6 +153,21 @@ export async function listAllVehicleController(
     }
 }
 
+export async function selfPostedVehiclesController(
+    _req: Request,
+    res: Response,
+    next: NextFunction,
+) {
+    try {
+        const response = await VehicleService.listSelfPostedVehicle(
+            res.locals.user,
+        );
+        return res.status(200).json({ success: true, data: response });
+    } catch (e: any) {
+        next(e);
+    }
+}
+
 export async function getVehiclesDetails(
     req: Request,
     res: Response,

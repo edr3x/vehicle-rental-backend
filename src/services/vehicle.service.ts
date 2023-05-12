@@ -121,6 +121,20 @@ export async function addVehicle(
     return { msg: "Vehicle added", result: vehicle };
 }
 
+export async function listSelfPostedVehicle(loggedInUser: any) {
+    const vehicles = await prisma.vehicle.findMany({
+        where: {
+            addedById: loggedInUser.id,
+        },
+        include: {
+            subCategory: true,
+            brand: true,
+        },
+    });
+
+    return { msg: "Vehicles fetched", result: vehicles };
+}
+
 export async function listAllVehicle() {
     let vehicles = await prisma.vehicle.findMany({
         where: {
