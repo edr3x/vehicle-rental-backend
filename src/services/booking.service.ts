@@ -116,9 +116,31 @@ export async function getBookingDetailsService(bookingId: string) {
         },
     });
 
-    return { msg: `Booking Details ${bookings}` };
+    return { msg: `Booking Details fetched`, bookings };
 }
 
-export async function myBookingRequestService(userdata: any) {}
+export async function myBookingRequestService(userdata: any) {
+    const bookings = await prisma.booking.findMany({
+        where: {
+            AND: [
+                {
+                    Vehicle: {
+                        addedById: userdata.id,
+                    },
+                },
+                {
+                    status: "pending",
+                },
+                {
+                    startDate: {
+                        gt: new Date(),
+                    },
+                },
+            ],
+        },
+    });
+
+    return { msg: `Booking Requests fetched`, bookings };
+}
 
 export async function deleteExpiredBookingsService() {}
