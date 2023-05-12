@@ -13,6 +13,8 @@ router.post(
     BookingController.bookVehicleController,
 );
 
+router.get("/details/:id", BookingController.getBookingDetails);
+
 // here id is bookingID
 router.get("/cancel/:id", BookingController.cancelBookingController);
 

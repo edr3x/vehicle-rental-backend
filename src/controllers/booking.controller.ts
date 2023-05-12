@@ -3,6 +3,7 @@ import { Request, Response, NextFunction } from "express";
 import {
     bookingService,
     cancelBookingService,
+    getBookingDetailsService,
     myBookingRequestService,
     myBookingsService,
 } from "../services/booking.service";
@@ -30,6 +31,20 @@ export async function cancelBookingController(
     try {
         const bookingid = req.params.id;
         const response = await cancelBookingService(bookingid, res.locals.user);
+
+        return res.status(200).json({ success: true, data: response });
+    } catch (e: any) {
+        next(e);
+    }
+}
+
+export async function getBookingDetails(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+) {
+    try {
+        const response = await getBookingDetailsService(req.params.id);
 
         return res.status(200).json({ success: true, data: response });
     } catch (e: any) {

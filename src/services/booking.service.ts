@@ -65,7 +65,59 @@ export async function cancelBookingService(bookingId: string, userdata: any) {
     return { msg: "Booking Successfully Cancelled" };
 }
 
-export async function myBookingsService(userdata: any) {}
+export async function myBookingsService(userdata: any) {
+    const bookings = await prisma.booking.findMany({
+        where: {
+            bookedById: userdata.id,
+        },
+        orderBy: {
+            createdAt: "desc",
+        },
+    });
+
+    return bookings;
+}
+
+export async function getBookingDetailsService(bookingId: string) {
+    const bookings = await prisma.booking.findUnique({
+        where: {
+            id: bookingId,
+        },
+        include: {
+            Vehicle: {
+                select: {
+                    id: true,
+                    title: true,
+                    description: true,
+                    isBooked: true,
+                    thumbnail: true,
+                    rate: true,
+                    type: true,
+                    brand: true,
+                    model: true,
+                    addedBy: {
+                        select: {
+                            fullName: true,
+                            phone: true,
+                            email: true,
+                            address: true,
+                        },
+                    },
+                },
+            },
+            bookedBy: {
+                select: {
+                    phone: true,
+                    fullName: true,
+                    email: true,
+                    address: true,
+                },
+            },
+        },
+    });
+
+    return { msg: `Booking Details ${bookings}` };
+}
 
 export async function myBookingRequestService(userdata: any) {}
 
