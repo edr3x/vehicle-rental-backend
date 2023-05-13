@@ -20,8 +20,8 @@ router.get("/cancel/:id", BookingController.cancelBookingController);
 
 router.get("/list", BookingController.getMyBookingsController);
 
+// NOTE: For Vehicle Uploader
 router.get("/requests", BookingController.myBookingRequestController);
-
 router.get("/requests/:id", BookingController.bookingRequestHandlerController);
 
 export default router;

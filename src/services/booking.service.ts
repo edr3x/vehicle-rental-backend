@@ -145,6 +145,7 @@ export async function getBookingDetailsService(bookingId: string) {
     return { msg: `Booking Details fetched`, bookings };
 }
 
+// NOTE: For Vehicle Uploader
 export async function myBookingRequestService(userdata: any) {
     const bookings = await prisma.booking.findMany({
         where: {
@@ -177,6 +178,7 @@ export async function myBookingRequestService(userdata: any) {
     return { msg: `Booking Requests fetched`, bookings };
 }
 
+// NOTE: For Vehicle Uploader
 export async function bookingRequestHandlerService(
     userData: any,
     bookingId: string,

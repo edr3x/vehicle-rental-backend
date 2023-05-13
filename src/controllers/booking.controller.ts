@@ -67,6 +67,7 @@ export async function getMyBookingsController(
     }
 }
 
+// NOTE: For Vehicle Uploader
 export async function myBookingRequestController(
     _req: Request,
     res: Response,
@@ -81,6 +82,7 @@ export async function myBookingRequestController(
     }
 }
 
+// NOTE: For Vehicle Uploader
 export async function bookingRequestHandlerController(
     req: Request,
     res: Response,
