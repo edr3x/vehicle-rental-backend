@@ -10,6 +10,31 @@ export async function bookingService(
 
     if (!user) throw new CustomError(400, "User Not Found");
 
+    const booking = await prisma.booking.findMany({
+        where: {
+            AND: [
+                {
+                    vehicleId: bookingDetails.vehicleId,
+                },
+                {
+                    bookedBy: {
+                        id: localUser.id,
+                    },
+                },
+                {
+                    status: "pending",
+                },
+            ],
+        },
+    });
+
+    if (booking.length !== 0) {
+        throw new CustomError(
+            406,
+            "You have already requested to book this Vehicle",
+        );
+    }
+
     const vehicleDetails = await prisma.vehicle.findUnique({
         where: {
             id: bookingDetails.vehicleId,
@@ -155,7 +180,7 @@ export async function myBookingRequestService(userdata: any) {
 export async function bookingRequestHandlerService(
     userData: any,
     bookingId: string,
-    action: string,
+    action: string, //NOTE: can only be accept or "reject"
 ) {
     const booking = await prisma.booking.findUnique({
         where: {

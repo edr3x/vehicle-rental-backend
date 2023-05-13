@@ -5,14 +5,20 @@ export const bookingSchema = z.object({
         vehicleId: z.string({
             required_error: "Please select a vehicle",
         }),
-        startDate: z.date({
-            required_error: "Please select a date and time",
-            invalid_type_error: "That's not a date!",
-        }),
-        endDate: z.date({
-            required_error: "Please select a date and time",
-            invalid_type_error: "That's not a date!",
-        }),
+        startDate: z
+            .string({
+                required_error: "Please select a date and time",
+            })
+            .datetime({
+                message: "That's not a valid date!",
+            }),
+        endDate: z
+            .string({
+                required_error: "Please select a date and time",
+            })
+            .datetime({
+                message: "That's not a valid date!",
+            }),
     }),
 });
 
