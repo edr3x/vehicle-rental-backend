@@ -88,8 +88,9 @@ export async function bookingRequestHandlerController(
 ) {
     try {
         const response = await bookingRequestHandlerService(
-            req.params.id,
             res.locals.user,
+            req.params.id,
+            req.query.action as string,
         );
 
         return res.status(200).json({ success: true, data: response });

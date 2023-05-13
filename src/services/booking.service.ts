@@ -132,11 +132,6 @@ export async function myBookingRequestService(userdata: any) {
                 {
                     status: "pending",
                 },
-                {
-                    startDate: {
-                        gt: new Date(),
-                    },
-                },
             ],
         },
         include: {
@@ -158,8 +153,87 @@ export async function myBookingRequestService(userdata: any) {
 }
 
 export async function bookingRequestHandlerService(
+    userData: any,
     bookingId: string,
-    userData: string,
-) {}
+    action: string,
+) {
+    const booking = await prisma.booking.findUnique({
+        where: {
+            id: bookingId,
+        },
+        include: {
+            Vehicle: {
+                select: {
+                    id: true,
+                    addedBy: {
+                        select: {
+                            id: true,
+                        },
+                    },
+                },
+            },
+        },
+    });
+
+    if (!booking) throw new CustomError(404, "Booking ID Not Found");
+
+    if (booking.Vehicle.addedBy.id !== userData.id) {
+        throw new CustomError(
+            403,
+            "You are not allowed to perform this action",
+        );
+    }
+
+    if (action === "accept") {
+        await prisma.$transaction([
+            prisma.booking.update({
+                where: {
+                    id: bookingId,
+                },
+                data: {
+                    status: "active",
+                },
+            }),
+
+            prisma.booking.updateMany({
+                where: {
+                    AND: [
+                        {
+                            vehicleId: booking.Vehicle.id,
+                        },
+                        {
+                            status: "pending",
+                        },
+                    ],
+                },
+                data: {
+                    status: "cancelled",
+                },
+            }),
+
+            prisma.vehicle.update({
+                where: {
+                    id: booking.Vehicle.id,
+                },
+                data: {
+                    isBooked: true,
+                },
+            }),
+        ]);
+    } else if (action === "reject") {
+        await prisma.booking.update({
+            where: {
+                id: bookingId,
+            },
+            data: {
+                status: "rejected",
+            },
+        });
+    } else {
+        throw new CustomError(400, "Invalid Action");
+    }
+
+    return { msg: `Booking Request ${action}ed` };
+}
 
 export async function deleteExpiredBookingsService() {}
