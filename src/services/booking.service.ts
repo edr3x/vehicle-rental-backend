@@ -98,6 +98,14 @@ export async function myBookingsService(userdata: any) {
         orderBy: {
             createdAt: "desc",
         },
+        include: {
+            Vehicle: {
+                select: {
+                    title: true,
+                    thumbnail: true,
+                },
+            },
+        },
     });
 
     return bookings;
