@@ -112,7 +112,7 @@ export async function myBookingsService(userdata: any) {
 }
 
 export async function getBookingDetailsService(bookingId: string) {
-    const bookings = await prisma.booking.findUnique({
+    let booking = await prisma.booking.findUnique({
         where: {
             id: bookingId,
         },
@@ -150,7 +150,25 @@ export async function getBookingDetailsService(bookingId: string) {
         },
     });
 
-    return { msg: `Booking Details fetched`, bookings };
+    if (!booking) throw new CustomError(404, "Booking ID Not Found");
+
+    return {
+        msg: "Booking Details Fetched",
+        result: {
+            ...booking,
+            Vehicle: {
+                ...booking.Vehicle,
+                addedBy: {
+                    ...booking.Vehicle.addedBy,
+                    phone: Number(booking.Vehicle.addedBy.phone),
+                },
+            },
+            bookedBy: {
+                ...booking.bookedBy,
+                phone: Number(booking.bookedBy.phone),
+            },
+        },
+    };
 }
 
 // NOTE: For Vehicle Uploader
