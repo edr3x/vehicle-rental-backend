@@ -130,6 +130,7 @@ export async function getBookingDetailsService(bookingId: string) {
                     model: true,
                     addedBy: {
                         select: {
+                            profileImage: true,
                             fullName: true,
                             phone: true,
                             email: true,
