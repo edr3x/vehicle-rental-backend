@@ -192,11 +192,6 @@ export async function myBookingRequestService(userdata: any) {
                 select: {
                     profileImage: true,
                     fullName: true,
-                    phone: true,
-                    email: true,
-                    address: true,
-                    gender: true,
-                    drivingLicense: true,
                 },
             },
         },
