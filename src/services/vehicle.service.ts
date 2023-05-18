@@ -129,6 +129,12 @@ export async function listSelfPostedVehicle(loggedInUser: any) {
         include: {
             subCategory: true,
             brand: true,
+            Booking: {
+                select: {
+                    id: true,
+                    status: true,
+                },
+            },
         },
     });
 
