@@ -233,7 +233,10 @@ export async function getVehiclesNearMe(inputValues: FindVehicleNearMeSchema) {
             : { isVerified: true, category };
 
     const allVehicles = await prisma.vehicle.findMany({
-        where: whereClause,
+        where: {
+            ...whereClause,
+            isBooked: false,
+        },
         select: {
             id: true,
             title: true,

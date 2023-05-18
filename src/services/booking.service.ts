@@ -188,6 +188,11 @@ export async function myBookingRequestService(userdata: any) {
             ],
         },
         include: {
+            Vehicle: {
+                select: {
+                    title: true,
+                },
+            },
             bookedBy: {
                 select: {
                     profileImage: true,
