@@ -86,6 +86,7 @@ model DrivingLicense {
 
 model Upload {
     id        String   @id @default(uuid())
+    image     String?
     images    String[]
     user      User?    @relation(fields: [userId], references: [id])
     userId    String?

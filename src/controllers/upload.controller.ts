@@ -5,6 +5,7 @@ import {
     updateProfilePic as updateProfilePicService,
     updateVehicleThumbnail,
     uploadService,
+    uploadSingleImageService,
 } from "../services/upload.service";
 
 interface MulterFile extends Express.Multer.File {}
@@ -20,6 +21,25 @@ export async function uploadController(
         const imageArr = images?.map((file: MulterFile) => file.filename);
 
         const response = await uploadService(imageArr, res.locals.user);
+
+        return res.status(201).json({ success: true, data: response });
+    } catch (e: any) {
+        next(e);
+    }
+}
+
+export async function uploadSingleController(
+    req: Request<{}, {}, { image: any }>,
+    res: Response,
+    next: NextFunction,
+) {
+    try {
+        let image = req.file as MulterFile | undefined;
+
+        const response = await uploadSingleImageService(
+            image?.filename,
+            res.locals.user,
+        );
 
         return res.status(201).json({ success: true, data: response });
     } catch (e: any) {

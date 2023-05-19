@@ -4,6 +4,7 @@ import {
     updateLicensePicController,
     updateProfilePicController,
     uploadController,
+    uploadSingleController,
 } from "../controllers/upload.controller";
 
 import { uploader } from "../middlewares/upload.middleware";
@@ -12,6 +13,8 @@ import { isAdmin } from "../middlewares/auth.middleware";
 const router = Router();
 
 router.post("/image", uploader.array("images"), uploadController);
+
+router.post("/", uploader.single("image"), uploadSingleController);
 
 router.patch("/profile", uploader.single("image"), updateProfilePicController);
 
