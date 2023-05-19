@@ -96,7 +96,7 @@ export async function addVehicle(
         features,
     } = vehicleDetails;
 
-    const vehicle = await prisma.vehicle.create({
+    await prisma.vehicle.create({
         data: {
             addedById: loggedInUser.id,
             title,
@@ -118,7 +118,7 @@ export async function addVehicle(
         },
     });
 
-    return { msg: "Vehicle added", result: vehicle };
+    return { msg: "Vehicle added successfully" };
 }
 
 export async function listSelfPostedVehicle(loggedInUser: any) {
