@@ -5,7 +5,6 @@ import {
     updateProfilePic as updateProfilePicService,
     updateVehicleThumbnail,
     uploadService,
-    uploadSingleImageService,
 } from "../services/upload.service";
 
 interface MulterFile extends Express.Multer.File {}
