@@ -36,12 +36,7 @@ export async function uploadSingleController(
     try {
         let image = req.file as MulterFile | undefined;
 
-        const response = await uploadSingleImageService(
-            image?.filename,
-            res.locals.user,
-        );
-
-        return res.status(201).json({ success: true, data: response });
+        return res.status(201).json({ success: true, data: image?.filename });
     } catch (e: any) {
         next(e);
     }

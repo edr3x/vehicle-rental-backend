@@ -12,17 +12,6 @@ export async function uploadService(images: any, loggedInUser: any) {
     return { msg: "Image Uploaded Successfully", image: upload.images };
 }
 
-export async function uploadSingleImageService(image: any, loggedInUser: any) {
-    const upload = await prisma.upload.create({
-        data: {
-            image: image,
-            userId: loggedInUser.id,
-        },
-    });
-
-    return { msg: "Image Uploaded Successfully", image: upload.image };
-}
-
 export async function updateProfilePic(image: any, loggedInUser: any) {
     const upload = await prisma.user.update({
         where: {
