@@ -75,7 +75,7 @@ export async function updateUserService(
     userDetails: UpdateUserSchema,
     localuserdata: any,
 ) {
-    const { fullName, gender, email } = userDetails;
+    const { fullName, profileImage, gender, email } = userDetails;
 
     const dbUser = await prisma.user.findUnique({
         where: {
@@ -103,6 +103,7 @@ export async function updateUserService(
         },
         data: {
             fullName,
+            profileImage,
             gender,
             email,
             isProfileUpdated: true,

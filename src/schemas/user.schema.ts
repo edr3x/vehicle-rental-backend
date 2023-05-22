@@ -16,6 +16,10 @@ export const updateUserSchema = z.object({
         gender: z.enum(["male", "female", "other"], {
             required_error: "Gender is required",
         }),
+
+        profileImage: z.string({
+            required_error: "Full Name is required",
+        }),
     }),
 });
 
