@@ -8,7 +8,6 @@ import {
 } from "../schemas/vehicle.schema";
 import { calculateDistance } from "../utils/calculate_distance";
 import { prisma } from "../utils/db";
-import config from "../config/env";
 import { CustomError } from "../utils/custom_error";
 
 export async function addSubCategory(subCategoryDetails: AddSubCategorySchema) {
@@ -230,6 +229,36 @@ export async function getVehicleDetailsService(id: string) {
             },
         },
     };
+}
+
+function shuffleArray<T>(array: T[]): T[] {
+    const shuffledArray = [...array];
+    for (let i = shuffledArray.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [shuffledArray[i], shuffledArray[j]] = [
+            shuffledArray[j],
+            shuffledArray[i],
+        ];
+    }
+    return shuffledArray;
+}
+
+export async function getRecommendedVehicles() {
+    const vehicles = await prisma.vehicle.findMany({
+        where: {
+            isVerified: true,
+        },
+        select: {
+            id: true,
+            thumbnail: true,
+            title: true,
+            rate: true,
+        },
+    });
+
+    const shuffledVehicles = shuffleArray(vehicles).slice(0, 5);
+
+    return { msg: "Recommended vehicles fetched", result: shuffledVehicles };
 }
 
 export async function getVehiclesNearMe(inputValues: FindVehicleNearMeSchema) {

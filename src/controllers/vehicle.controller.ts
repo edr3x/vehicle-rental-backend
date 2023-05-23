@@ -183,6 +183,20 @@ export async function getVehiclesDetails(
     }
 }
 
+export async function recommendedVehiclesController(
+    _req: Request,
+    res: Response,
+    next: NextFunction,
+) {
+    try {
+        const response = await VehicleService.getRecommendedVehicles();
+
+        return res.status(200).json({ success: true, data: response });
+    } catch (e: any) {
+        next(e);
+    }
+}
+
 export async function getVehiclesNearMeController(
     req: Request<{}, {}, FindVehicleNearMeSchema>,
     res: Response,
