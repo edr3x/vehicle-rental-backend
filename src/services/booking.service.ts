@@ -1,3 +1,4 @@
+import { join } from "path";
 import { BookingSchema } from "../schemas/booking.schema";
 import { CustomError } from "../utils/custom_error";
 import { prisma } from "../utils/db";
@@ -78,14 +79,39 @@ export async function cancelBookingService(bookingId: string, userdata: any) {
         );
     }
 
-    await prisma.booking.update({
-        where: {
-            id: bookingId,
-        },
-        data: {
-            status: "cancelled",
-        },
-    });
+    await prisma.$transaction([
+        prisma.booking.update({
+            where: {
+                id: bookingId,
+            },
+            data: {
+                status: "cancelled",
+            },
+        }),
+
+        prisma.vehicle.updateMany({
+            where: {
+                AND: [
+                    {
+                        id: booking.vehicleId,
+                    },
+                    {
+                        isBooked: true,
+                    },
+                    {
+                        Booking: {
+                            some: {
+                                bookedById: userdata.id,
+                            },
+                        },
+                    },
+                ],
+            },
+            data: {
+                isBooked: false,
+            },
+        }),
+    ]);
 
     return { msg: "Booking Successfully Cancelled" };
 }
@@ -261,7 +287,7 @@ export async function bookingRequestHandlerService(
                     ],
                 },
                 data: {
-                    status: "cancelled",
+                    status: "rejected",
                 },
             }),
 
