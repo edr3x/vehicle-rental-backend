@@ -323,3 +323,29 @@ export async function getVehiclesNearMe(inputValues: FindVehicleNearMeSchema) {
 
     return { msg: "Vehicles near me fetched", result: newArr };
 }
+
+export async function bookingsPerVehicle(vehicleId: string) {
+    const bookings = await prisma.booking.findMany({
+        where: {
+            vehicleId: vehicleId,
+        },
+        orderBy: {
+            createdAt: "desc",
+        },
+        include: {
+            bookedBy: {
+                select: {
+                    fullName: true,
+                    profileImage: true,
+                },
+            },
+            Vehicle: {
+                select: {
+                    rate: true,
+                },
+            },
+        },
+    });
+
+    return { msg: "Bookings fetched", bookings };
+}

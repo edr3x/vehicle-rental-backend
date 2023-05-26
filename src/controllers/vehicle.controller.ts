@@ -210,3 +210,17 @@ export async function getVehiclesNearMeController(
         next(e);
     }
 }
+
+export async function listBookingsPerVehicle(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+) {
+    try {
+        const response = await VehicleService.bookingsPerVehicle(req.params.id);
+
+        return res.status(200).json({ success: true, data: response });
+    } catch (e: any) {
+        next(e);
+    }
+}
