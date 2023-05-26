@@ -225,8 +225,6 @@ export async function listBookingsPerVehicle(
     }
 }
 
-export const arr = [];
-
 export async function searchVehicleController(
     req: Request,
     res: Response,
