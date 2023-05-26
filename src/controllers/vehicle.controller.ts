@@ -224,3 +224,21 @@ export async function listBookingsPerVehicle(
         next(e);
     }
 }
+
+export const arr = [];
+
+export async function searchVehicleController(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+) {
+    try {
+        const searchQuery = req.query.q as string;
+
+        const response = await VehicleService.searchVehicles(searchQuery);
+
+        return res.status(200).json({ success: true, data: response });
+    } catch (e: any) {
+        next(e);
+    }
+}

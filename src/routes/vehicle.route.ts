@@ -52,6 +52,7 @@ router.delete("/brand/:id", isAdmin, VehicleController.deleteBrandController);
 router.get("/", VehicleController.listAllVehicleController);
 router.get("/rec", VehicleController.recommendedVehiclesController);
 router.get("/self", VehicleController.selfPostedVehiclesController);
+router.get("/search", VehicleController.searchVehicleController);
 router.get("/:id", VehicleController.getVehiclesDetails);
 router.get("/booking/:id", VehicleController.listBookingsPerVehicle);
 router.post(

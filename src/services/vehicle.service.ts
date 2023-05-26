@@ -349,3 +349,36 @@ export async function bookingsPerVehicle(vehicleId: string) {
 
     return { msg: "Bookings fetched", bookings };
 }
+
+export async function searchVehicles(searchString: string) {
+    const vehicles = await prisma.vehicle.findMany({
+        where: {
+            OR: [
+                {
+                    title: {
+                        contains: searchString,
+                        mode: "insensitive",
+                    },
+                },
+                {
+                    model: {
+                        contains: searchString,
+                        mode: "insensitive",
+                    },
+                },
+            ],
+        },
+        select: {
+            id: true,
+            title: true,
+            thumbnail: true,
+            rate: true,
+        },
+    });
+
+    if (!vehicles) throw new CustomError(404, "No vehicles found");
+
+    if (vehicles.length === 0) throw new CustomError(404, "No vehicles found");
+
+    return { msg: "Vehicles fetched", result: vehicles };
+}
