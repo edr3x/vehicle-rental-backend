@@ -1,4 +1,3 @@
-import { join } from "path";
 import { BookingSchema } from "../schemas/booking.schema";
 import { CustomError } from "../utils/custom_error";
 import { prisma } from "../utils/db";
@@ -235,7 +234,7 @@ export async function myBookingRequestService(userdata: any) {
 export async function bookingRequestHandlerService(
     userData: any,
     bookingId: string,
-    action: string, //NOTE: can only be accept or "reject"
+    action: string, //NOTE: can only be "accept" or "reject" or "complete"
 ) {
     const booking = await prisma.booking.findUnique({
         where: {
@@ -297,6 +296,26 @@ export async function bookingRequestHandlerService(
                 },
                 data: {
                     isBooked: true,
+                },
+            }),
+        ]);
+    } else if (action == "complete") {
+        await prisma.$transaction([
+            prisma.booking.update({
+                where: {
+                    id: bookingId,
+                },
+                data: {
+                    status: "completed",
+                },
+            }),
+
+            prisma.vehicle.update({
+                where: {
+                    id: booking.Vehicle.id,
+                },
+                data: {
+                    isBooked: false,
                 },
             }),
         ]);
