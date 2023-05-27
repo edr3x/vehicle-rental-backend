@@ -300,6 +300,7 @@ export async function bookingRequestHandlerService(
             }),
         ]);
     } else if (action == "complete") {
+        const time = new Date().toISOString();
         await prisma.$transaction([
             prisma.booking.update({
                 where: {
@@ -307,6 +308,7 @@ export async function bookingRequestHandlerService(
                 },
                 data: {
                     status: "completed",
+                    endDate: time,
                 },
             }),
 
