@@ -9,7 +9,6 @@ import {
 import { calculateDistance } from "../utils/calculate_distance";
 import { prisma } from "../utils/db";
 import { CustomError } from "../utils/custom_error";
-import { bookingService } from "./booking.service";
 
 export async function addSubCategory(subCategoryDetails: AddSubCategorySchema) {
     const subCategory = await prisma.subCategory.create({
@@ -378,18 +377,25 @@ export async function bookingsPerVehicle(vehicleId: string) {
 export async function searchVehicles(searchString: string) {
     const vehicles = await prisma.vehicle.findMany({
         where: {
-            OR: [
+            AND: [
                 {
-                    title: {
-                        contains: searchString,
-                        mode: "insensitive",
-                    },
+                    isVerified: true,
                 },
                 {
-                    model: {
-                        contains: searchString,
-                        mode: "insensitive",
-                    },
+                    OR: [
+                        {
+                            title: {
+                                contains: searchString,
+                                mode: "insensitive",
+                            },
+                        },
+                        {
+                            model: {
+                                contains: searchString,
+                                mode: "insensitive",
+                            },
+                        },
+                    ],
                 },
             ],
         },
