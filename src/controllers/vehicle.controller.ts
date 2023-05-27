@@ -189,7 +189,9 @@ export async function recommendedVehiclesController(
     next: NextFunction,
 ) {
     try {
-        const response = await VehicleService.getRecommendedVehicles();
+        const response = await VehicleService.getRecommendedVehicles(
+            res.locals.user,
+        );
 
         return res.status(200).json({ success: true, data: response });
     } catch (e: any) {

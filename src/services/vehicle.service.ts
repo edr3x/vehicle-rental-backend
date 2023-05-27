@@ -9,6 +9,7 @@ import {
 import { calculateDistance } from "../utils/calculate_distance";
 import { prisma } from "../utils/db";
 import { CustomError } from "../utils/custom_error";
+import { bookingService } from "./booking.service";
 
 export async function addSubCategory(subCategoryDetails: AddSubCategorySchema) {
     const subCategory = await prisma.subCategory.create({
@@ -243,7 +244,7 @@ function shuffleArray<T>(array: T[]): T[] {
     return shuffledArray;
 }
 
-export async function getRecommendedVehicles() {
+export async function getRecommendedVehicles(localUser: any) {
     const vehicles = await prisma.vehicle.findMany({
         where: {
             isVerified: true,
@@ -256,9 +257,33 @@ export async function getRecommendedVehicles() {
         },
     });
 
-    const shuffledVehicles = shuffleArray(vehicles).slice(0, 5);
+    const bookingHistory: Array<any> = await prisma.$queryRaw`
+        SELECT DISTINCT ON (b."vehicleId") v.id, v.thumbnail, v.title, v.rate
+        FROM "Booking" b
+        JOIN "Vehicle" v ON b."vehicleId" = v.id
+        WHERE b."bookedById" = ${localUser.id}
+          AND b."status" = 'completed'
+          AND b."vehicleId" IN (
+            SELECT "vehicleId"
+            FROM "Booking"
+            WHERE "bookedById" = ${localUser.id}
+              AND "status" = 'completed'
+            GROUP BY "vehicleId"
+            HAVING COUNT("vehicleId") > 2
+        )`;
 
-    return { msg: "Recommended vehicles fetched", result: shuffledVehicles };
+    const shuffledVehicles = shuffleArray(vehicles).slice(0, 6);
+
+    if (bookingHistory.length === 0) {
+        return {
+            msg: "Recommended vehicles fetched",
+            result: shuffledVehicles,
+        };
+    }
+
+    const combinedArray = bookingHistory.concat(shuffledVehicles);
+
+    return { msg: "Recommended vehicles fetched", result: combinedArray };
 }
 
 export async function getVehiclesNearMe(inputValues: FindVehicleNearMeSchema) {
