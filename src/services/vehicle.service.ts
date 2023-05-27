@@ -382,6 +382,9 @@ export async function searchVehicles(searchString: string) {
                     isVerified: true,
                 },
                 {
+                    isBooked: false,
+                },
+                {
                     OR: [
                         {
                             title: {
