@@ -299,3 +299,51 @@ export async function deleteUserService(id: string) {
 
     return "User deleted successfully";
 }
+
+export async function userData() {
+    const users = await prisma.user.findMany({
+        select: {
+            id: true,
+            gender: true,
+            address: {
+                select: {
+                    province: true,
+                    district: true,
+                    municipality: true,
+                    city: true,
+                    street: true,
+                },
+            },
+            email: true,
+            booking: {
+                select: {
+                    Vehicle: {
+                        select: {
+                            id: true,
+                            title: true,
+                            rate: true,
+                            model: true,
+                            brand: {
+                                select: {
+                                    id: true,
+                                    title: true,
+                                },
+                            },
+                            category: true,
+                            features: {
+                                select: {
+                                    id: true,
+                                    color: true,
+                                    hasAirbag: true,
+                                    hasAC: true,
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    });
+
+    return users;
+}

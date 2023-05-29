@@ -15,6 +15,7 @@ import {
     updateAddressService,
     updateLicenseDetailsService,
     updateUserService,
+    userData,
 } from "../services/user.service";
 
 export async function getUserController(
@@ -114,6 +115,20 @@ export async function deleteUser(
 ) {
     try {
         const response = await deleteUserService(req.params.id);
+
+        return res.status(200).json({ success: true, data: response });
+    } catch (e: any) {
+        next(e);
+    }
+}
+
+export async function necessaryUserData(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+) {
+    try {
+        const response = await userData();
 
         return res.status(200).json({ success: true, data: response });
     } catch (e: any) {
