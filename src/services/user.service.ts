@@ -323,6 +323,7 @@ export async function userData() {
                             title: true,
                             rate: true,
                             model: true,
+                            thumbnail: true,
                             brand: {
                                 select: {
                                     id: true,
