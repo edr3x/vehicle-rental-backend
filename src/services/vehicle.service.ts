@@ -9,6 +9,7 @@ import {
 import { calculateDistance } from "../utils/calculate_distance";
 import { prisma } from "../utils/db";
 import { CustomError } from "../utils/custom_error";
+import Axios from "axios";
 
 export async function addSubCategory(subCategoryDetails: AddSubCategorySchema) {
     const subCategory = await prisma.subCategory.create({
@@ -243,6 +244,24 @@ function shuffleArray<T>(array: T[]): T[] {
     return shuffledArray;
 }
 
+type Vehicle = {
+    id: string;
+    title: string;
+    rate: string;
+    thumbnail?: string;
+};
+
+function removeDuplicates(array: Vehicle[]): Vehicle[] {
+    const uniqueKeys = new Set();
+    return array.filter((vehicle) => {
+        if (uniqueKeys.has(vehicle["id"])) {
+            return false;
+        }
+        uniqueKeys.add(vehicle["id"]);
+        return true;
+    });
+}
+
 export async function getRecommendedVehicles(localUser: any) {
     const vehicles = await prisma.vehicle.findMany({
         where: {
@@ -255,6 +274,13 @@ export async function getRecommendedVehicles(localUser: any) {
             rate: true,
         },
     });
+
+    const shuffledVehicles = shuffleArray(vehicles).slice(0, 8);
+
+    const colab_response = await Axios.get(
+        `http://localhost:5050/recom/${localUser.id}`,
+    );
+    const colab_vehicles = colab_response.data["data"];
 
     const bookingHistory: Array<any> = await prisma.$queryRaw`
         SELECT DISTINCT ON (b."vehicleId") v.id, v.thumbnail, v.title, v.rate
@@ -271,18 +297,13 @@ export async function getRecommendedVehicles(localUser: any) {
             HAVING COUNT("vehicleId") > 2
         )`;
 
-    const shuffledVehicles = shuffleArray(vehicles).slice(0, 6);
+    const combined = removeDuplicates(
+        colab_vehicles.concat(bookingHistory).concat(shuffledVehicles),
+    ).slice(0, 8);
 
-    if (bookingHistory.length === 0) {
-        return {
-            msg: "Recommended vehicles fetched",
-            result: shuffledVehicles,
-        };
-    }
+    const combined_vehicle = shuffleArray(combined);
 
-    const combinedArray = bookingHistory.concat(shuffledVehicles);
-
-    return { msg: "Recommended vehicles fetched", result: combinedArray };
+    return { msg: "Recommended vehicles fetched", result: combined_vehicle };
 }
 
 export async function getVehiclesNearMe(inputValues: FindVehicleNearMeSchema) {
