@@ -79,6 +79,19 @@ export async function addVehicle(
     vehicleDetails: AddVehicleSchema,
     loggedInUser: any,
 ) {
+    const user = await prisma.user.findUnique({
+        where: { id: loggedInUser.id },
+    });
+
+    if (!user) throw new CustomError(400, "User Not Found");
+
+    if (user.kycStatus !== "verified") {
+        throw new CustomError(
+            400,
+            "Please verify your KYC first to add a vehicle",
+        );
+    }
+
     const {
         title,
         type,
