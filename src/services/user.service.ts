@@ -354,9 +354,57 @@ export async function userData() {
 export async function postCitizenshipService(
     userId: string,
     citizenshipDetails: PostCitizenshipSchema,
-) {}
+) {
+    const user = await prisma.user.findUnique({
+        where: {
+            id: userId,
+        },
+    });
+
+    if (!user) throw new CustomError(400, "User not found");
+
+    await prisma.$transaction([
+        prisma.kyc.create({
+            data: {
+                ...citizenshipDetails,
+                userId,
+            },
+        }),
+        prisma.user.update({
+            where: { id: userId },
+            data: {
+                kycStatus: "pending",
+            },
+        }),
+    ]);
+
+    return "Citizenship details created successfully";
+}
 
 export async function updateCitizenshipService(
     userId: string,
     citizenshipDetails: UpdateCitizenshipSchema,
-) {}
+) {
+    const user = await prisma.user.findUnique({
+        where: {
+            id: userId,
+        },
+    });
+
+    if (!user) throw new CustomError(400, "User not found");
+
+    await prisma.$transaction([
+        prisma.kyc.update({
+            where: { userId },
+            data: citizenshipDetails,
+        }),
+        prisma.user.update({
+            where: { id: userId },
+            data: {
+                kycStatus: "pending",
+            },
+        }),
+    ]);
+
+    return "Citizenship details updated successfully";
+}
