@@ -48,6 +48,7 @@ export async function getUserService(locaUserData: any) {
                 role: true,
                 isProfileUpdated: true,
                 isAddressUpdated: true,
+                kycStatus: true,
                 profileImage: true,
                 address: {
                     select: {
@@ -349,6 +350,23 @@ export async function userData() {
     });
 
     return users;
+}
+
+export async function getKycDetailsService(userId: string) {
+    const kycDetails = await prisma.kyc.findUnique({
+        where: { userId },
+        select: {
+            citizenshipFront: true,
+            citizenshipBack: true,
+            issuedDate: true,
+            citizenshipNo: true,
+            issuedDistrict: true,
+        },
+    });
+
+    if (!kycDetails) throw new CustomError(400, "Kyc details not found");
+
+    return kycDetails;
 }
 
 export async function postCitizenshipService(

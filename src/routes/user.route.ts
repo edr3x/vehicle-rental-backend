@@ -41,6 +41,7 @@ router.patch(
 
 router.delete("/:id", isAdmin, UserController.deleteUser);
 
+router.get("/kyc", UserController.getKycDetailsController);
 router.post(
     "/kyc",
     verifyInput(postCitizenshipSchema),

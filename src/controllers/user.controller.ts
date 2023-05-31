@@ -13,6 +13,7 @@ import {
     createLicenseDetailsService,
     deleteUserService,
     getAllUserService,
+    getKycDetailsService,
     getUserService,
     postCitizenshipService,
     updateAddressService,
@@ -133,6 +134,20 @@ export async function necessaryUserData(
 ) {
     try {
         const response = await userData();
+
+        return res.status(200).json({ success: true, data: response });
+    } catch (e: any) {
+        next(e);
+    }
+}
+
+export async function getKycDetailsController(
+    _req: Request,
+    res: Response,
+    next: NextFunction,
+) {
+    try {
+        const response = await getKycDetailsService(res.locals.user.id);
 
         return res.status(200).json({ success: true, data: response });
     } catch (e: any) {
