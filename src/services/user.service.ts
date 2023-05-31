@@ -5,7 +5,9 @@ import { CustomError } from "../utils/custom_error";
 
 import {
     LicenseDetailsSchema,
+    PostCitizenshipSchema,
     UpdateAddressSchema,
+    UpdateCitizenshipSchema,
     UpdateLicenseSchema,
     UpdateUserSchema,
 } from "../schemas/user.schema";
@@ -348,3 +350,13 @@ export async function userData() {
 
     return users;
 }
+
+export async function postCitizenshipService(
+    userId: string,
+    citizenshipDetails: PostCitizenshipSchema,
+) {}
+
+export async function updateCitizenshipService(
+    userId: string,
+    citizenshipDetails: UpdateCitizenshipSchema,
+) {}

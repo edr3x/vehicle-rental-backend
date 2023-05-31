@@ -10,6 +10,8 @@ export async function bookingService(
 
     if (!user) throw new CustomError(400, "User Not Found");
 
+    //TODO: add KYC verification to verify user
+
     const booking = await prisma.booking.findMany({
         where: {
             AND: [

@@ -95,7 +95,52 @@ export const updateLicenseSchema = z.object({
     }),
 });
 
+export const postCitizenshipSchema = z.object({
+    body: z.object({
+        citizenshipFront: z.string({
+            required_error: "Citizenship front image is required",
+        }),
+        citizenshipBack: z.string({
+            required_error: "Citizenship back image is required",
+        }),
+        citizenshipNo: z.string({
+            required_error: "Citizenship number is required",
+        }),
+        issuedDistrict: z.string({
+            required_error: "Issued district is required",
+        }),
+        issuedDate: z
+            .string({
+                required_error: "Issued date is required",
+            })
+            .datetime({
+                message: "That's not a valid date!",
+            }),
+    }),
+});
+
+export const updateCitizenshipSchema = z.object({
+    body: z.object({
+        citizenshipFront: z.string().optional(),
+        citizenshipBack: z.string().optional(),
+        citizenshipNo: z.string().optional(),
+        issuedDistrict: z.string().optional(),
+        issuedDate: z
+            .string()
+            .datetime({
+                message: "That's not a valid date!",
+            })
+            .optional(),
+    }),
+});
+
 export type UpdateUserSchema = TypeOf<typeof updateUserSchema>["body"];
 export type UpdateAddressSchema = TypeOf<typeof updateAddressSchema>["body"];
 export type LicenseDetailsSchema = TypeOf<typeof licenseDetailsSchema>["body"];
 export type UpdateLicenseSchema = TypeOf<typeof updateLicenseSchema>["body"];
+export type PostCitizenshipSchema = TypeOf<
+    typeof postCitizenshipSchema
+>["body"];
+export type UpdateCitizenshipSchema = TypeOf<
+    typeof updateCitizenshipSchema
+>["body"];

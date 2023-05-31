@@ -4,7 +4,9 @@ import { verifyInput } from "../middlewares/verifyinput.middleware";
 
 import {
     licenseDetailsSchema,
+    postCitizenshipSchema,
     updateAddressSchema,
+    updateCitizenshipSchema,
     updateUserSchema,
 } from "../schemas/user.schema";
 
@@ -38,5 +40,16 @@ router.patch(
 );
 
 router.delete("/:id", isAdmin, UserController.deleteUser);
+
+router.post(
+    "/kyc",
+    verifyInput(postCitizenshipSchema),
+    UserController.postCitizenshipController,
+);
+router.patch(
+    "/kyc",
+    verifyInput(updateCitizenshipSchema),
+    UserController.updateCitizenshipController,
+);
 
 export default router;

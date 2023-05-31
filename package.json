@@ -11,7 +11,7 @@
         "format": "prettier --write \"src/**/*.ts\""
     },
     "dependencies": {
-        "@prisma/client": "^4.14.1",
+        "@prisma/client": "^4.15.0",
         "axios": "^1.4.0",
         "cors": "^2.8.5",
         "dotenv": "^16.0.3",

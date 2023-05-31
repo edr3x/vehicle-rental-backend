@@ -5,6 +5,8 @@ import {
     UpdateAddressSchema,
     LicenseDetailsSchema,
     UpdateLicenseSchema,
+    PostCitizenshipSchema,
+    UpdateCitizenshipSchema,
 } from "../schemas/user.schema";
 
 import {
@@ -12,7 +14,9 @@ import {
     deleteUserService,
     getAllUserService,
     getUserService,
+    postCitizenshipService,
     updateAddressService,
+    updateCitizenshipService,
     updateLicenseDetailsService,
     updateUserService,
     userData,
@@ -123,12 +127,46 @@ export async function deleteUser(
 }
 
 export async function necessaryUserData(
-    req: Request,
+    _req: Request,
     res: Response,
     next: NextFunction,
 ) {
     try {
         const response = await userData();
+
+        return res.status(200).json({ success: true, data: response });
+    } catch (e: any) {
+        next(e);
+    }
+}
+
+export async function postCitizenshipController(
+    req: Request<{}, {}, PostCitizenshipSchema>,
+    res: Response,
+    next: NextFunction,
+) {
+    try {
+        const response = await postCitizenshipService(
+            res.locals.user.id,
+            req.body,
+        );
+
+        return res.status(200).json({ success: true, data: response });
+    } catch (e: any) {
+        next(e);
+    }
+}
+
+export async function updateCitizenshipController(
+    req: Request<{}, {}, UpdateCitizenshipSchema>,
+    res: Response,
+    next: NextFunction,
+) {
+    try {
+        const response = await updateCitizenshipService(
+            res.locals.user.id,
+            req.body,
+        );
 
         return res.status(200).json({ success: true, data: response });
     } catch (e: any) {
