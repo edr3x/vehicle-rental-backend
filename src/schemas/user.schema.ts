@@ -109,13 +109,9 @@ export const postCitizenshipSchema = z.object({
         issuedDistrict: z.string({
             required_error: "Issued district is required",
         }),
-        issuedDate: z
-            .string({
-                required_error: "Issued date is required",
-            })
-            .datetime({
-                message: "That's not a valid date!",
-            }),
+        issuedDate: z.string({
+            required_error: "Issued date is required",
+        }),
     }),
 });
 
@@ -125,12 +121,7 @@ export const updateCitizenshipSchema = z.object({
         citizenshipBack: z.string().optional(),
         citizenshipNo: z.string().optional(),
         issuedDistrict: z.string().optional(),
-        issuedDate: z
-            .string()
-            .datetime({
-                message: "That's not a valid date!",
-            })
-            .optional(),
+        issuedDate: z.string().optional(),
     }),
 });
 
