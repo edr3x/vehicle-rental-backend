@@ -7,6 +7,7 @@ import userRoute from "./user.route";
 import vehicleRoute from "./vehicle.route";
 import uploadRoute from "./upload.route";
 import bookingRoute from "./booking.route";
+import { necessaryUserData } from "../controllers/user.controller";
 
 export const router = Router();
 
@@ -15,3 +16,5 @@ router.use("/user", isLoggedIn, userRoute);
 router.use("/vehicle", isLoggedIn, vehicleRoute);
 router.use("/upload", isLoggedIn, uploadRoute);
 router.use("/booking", isLoggedIn, bookingRoute);
+
+router.get("/userdata", necessaryUserData);

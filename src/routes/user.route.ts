@@ -19,8 +19,6 @@ router.get("/profile", UserController.getUserController);
 
 router.get("/all", isAdmin, UserController.getAllUsersController);
 
-router.get("/userdata", UserController.necessaryUserData);
-
 router.patch(
     "/profile",
     verifyInput(updateUserSchema),
