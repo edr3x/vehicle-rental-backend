@@ -275,6 +275,19 @@ function removeDuplicates(array: Vehicle[]): Vehicle[] {
     });
 }
 
+async function getVehicleListingFromAlgo(id: string) {
+    try {
+        const colab_response = await Axios.get(
+            `http://localhost:5050/recom/${id}`,
+        );
+
+        return colab_response.data["data"];
+    } catch (e) {
+        console.log("Can't connect with algorithm service");
+        return [];
+    }
+}
+
 export async function getRecommendedVehicles(localUser: any) {
     const vehicles = await prisma.vehicle.findMany({
         where: {
@@ -290,10 +303,7 @@ export async function getRecommendedVehicles(localUser: any) {
 
     const shuffledVehicles = shuffleArray(vehicles).slice(0, 8);
 
-    const colab_response = await Axios.get(
-        `http://localhost:5050/recom/${localUser.id}`,
-    );
-    const colab_vehicles = colab_response.data["data"];
+    const colab_vehicles = await getVehicleListingFromAlgo(localUser.id);
 
     const bookingHistory: Array<any> = await prisma.$queryRaw`
         SELECT DISTINCT ON (b."vehicleId") v.id, v.thumbnail, v.title, v.rate
@@ -375,6 +385,8 @@ export async function getVehiclesNearMe(inputValues: FindVehicleNearMeSchema) {
             ...allVehicles[i],
             distance,
         };
+
+        console.log;
 
         if (distance <= 15) newArr.push(newVehicleList);
     }
