@@ -5,9 +5,9 @@
     "license": "MIT",
     "scripts": {
         "build": "tsc",
-        "start": "node dist/main.js",
         "dev": "nodemon src/main.ts",
         "db": "prisma studio",
+        "start": "docker-compose up -d && nodemon src/main.ts",
         "format": "prettier --write \"src/**/*.ts\""
     },
     "dependencies": {
