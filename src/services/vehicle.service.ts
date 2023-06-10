@@ -158,13 +158,22 @@ export async function listSelfPostedVehicle(loggedInUser: any) {
 
 export async function listAllVehicle() {
     let vehicles = await prisma.vehicle.findMany({
+        orderBy: {
+            createdAt: "desc",
+        },
         where: {
             isVerified: true,
         },
         select: {
             id: true,
             title: true,
-            addedById: true,
+            addedBy: {
+                select: {
+                    id: true,
+                    fullName: true,
+                    profileImage: true,
+                },
+            },
             type: true,
             category: true,
             subCategory: {
@@ -322,7 +331,7 @@ export async function getRecommendedVehicles(localUser: any) {
 
     const combined = removeDuplicates(
         colab_vehicles.concat(bookingHistory).concat(shuffledVehicles),
-    ).slice(0, 8);
+    ).slice(0, 6);
 
     const combined_vehicle = shuffleArray(combined);
 
@@ -386,9 +395,16 @@ export async function getVehiclesNearMe(inputValues: FindVehicleNearMeSchema) {
             distance,
         };
 
-        console.log;
-
-        if (distance <= 15) newArr.push(newVehicleList);
+        if (distance <= 15) {
+            let insertIndex = 0;
+            while (
+                insertIndex < newArr.length &&
+                newArr[insertIndex].distance < distance
+            ) {
+                insertIndex++;
+            }
+            newArr.splice(insertIndex, 0, newVehicleList);
+        }
     }
 
     return { msg: "Vehicles near me fetched", result: newArr };
