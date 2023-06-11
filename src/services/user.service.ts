@@ -17,6 +17,7 @@ export async function getAllUserService() {
     const users = await prisma.user.findMany({
         include: {
             address: true,
+            kyc: true,
         },
     });
 
