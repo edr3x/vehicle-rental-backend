@@ -36,6 +36,29 @@ export async function getAllUserService() {
     return response;
 }
 
+export async function getUserDetailsService(id: string) {
+    const user = await prisma.user.findUnique({
+        where: { id },
+        include: {
+            address: true,
+            kyc: true,
+            booking: {
+                include: {
+                    Vehicle: true,
+                },
+            },
+            vehicle: true,
+        },
+    });
+
+    if (!user) throw new CustomError(400, "User not found");
+
+    return {
+        ...user,
+        phone: Number(user.phone.toString()),
+    };
+}
+
 export async function getUserService(locaUserData: any) {
     try {
         const user = await prisma.user.findUnique({

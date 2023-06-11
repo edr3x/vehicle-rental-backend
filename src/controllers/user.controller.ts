@@ -15,6 +15,7 @@ import {
     getAllUserService,
     getKycDetailsService,
     getSimilarUserService,
+    getUserDetailsService,
     getUserService,
     postCitizenshipService,
     updateAddressService,
@@ -31,6 +32,20 @@ export async function getUserController(
 ) {
     try {
         const response = await getUserService(res.locals.user);
+
+        return res.status(200).json({ success: true, data: response });
+    } catch (e: any) {
+        next(e);
+    }
+}
+
+export async function getUserDetailsController(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+) {
+    try {
+        const response = await getUserDetailsService(req.params.id);
 
         return res.status(200).json({ success: true, data: response });
     } catch (e: any) {
