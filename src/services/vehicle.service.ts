@@ -167,6 +167,7 @@ export async function listAllVehicle() {
         select: {
             id: true,
             title: true,
+            isVerified: true,
             addedBy: {
                 select: {
                     id: true,
