@@ -18,6 +18,7 @@ const router = Router();
 router.get("/profile", UserController.getUserController);
 
 router.get("/all", isAdmin, UserController.getAllUsersController);
+router.get("/similar/:id", isAdmin, UserController.getSimilarUsersController);
 
 router.patch(
     "/profile",

@@ -2,6 +2,7 @@ import { v4 as uuidv4 } from "uuid";
 
 import { prisma } from "../utils/db";
 import { CustomError } from "../utils/custom_error";
+import Axios from "axios";
 
 import {
     LicenseDetailsSchema,
@@ -426,4 +427,51 @@ export async function updateCitizenshipService(
     ]);
 
     return "Citizenship details updated successfully";
+}
+
+type SimilarUsers = {
+    id: string;
+    similarity: number;
+};
+
+async function getSimilarUserDataFromAlgo(
+    id: string,
+): Promise<SimilarUsers[] | []> {
+    try {
+        const colab_response = await Axios.get(
+            `http://localhost:5050/similaruser/${id}`,
+        );
+
+        return colab_response.data["data"] as SimilarUsers[];
+    } catch (e) {
+        console.log("Can't connect with algorithm service");
+        return [];
+    }
+}
+
+export async function getSimilarUserService(id: string) {
+    const similarUsers = await getSimilarUserDataFromAlgo(id);
+
+    if (similarUsers.length === 0) {
+        return [];
+    }
+
+    const response: Array<any> = [];
+
+    for (let i = 0; i < similarUsers.length; i++) {
+        const user = await prisma.user.findUnique({
+            where: {
+                id: similarUsers[i].id,
+            },
+            select: {
+                id: true,
+                fullName: true,
+                profileImage: true,
+            },
+        });
+
+        response.push({ ...user, similarity: similarUsers[i].similarity });
+    }
+
+    return response;
 }

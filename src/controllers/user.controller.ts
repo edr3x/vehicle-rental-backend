@@ -14,6 +14,7 @@ import {
     deleteUserService,
     getAllUserService,
     getKycDetailsService,
+    getSimilarUserService,
     getUserService,
     postCitizenshipService,
     updateAddressService,
@@ -182,6 +183,20 @@ export async function updateCitizenshipController(
             res.locals.user.id,
             req.body,
         );
+
+        return res.status(200).json({ success: true, data: response });
+    } catch (e: any) {
+        next(e);
+    }
+}
+
+export async function getSimilarUsersController(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+) {
+    try {
+        const response = await getSimilarUserService(req.params.id);
 
         return res.status(200).json({ success: true, data: response });
     } catch (e: any) {
