@@ -43,6 +43,9 @@ export async function getUserDetailsService(id: string) {
             address: true,
             kyc: true,
             booking: {
+                orderBy: {
+                    createdAt: "desc",
+                },
                 include: {
                     Vehicle: true,
                 },
