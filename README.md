@@ -1,4 +1,5 @@
 # Vechcle Rental Platform
+Backend repo for [flutter application](https://github.com/edr3x/vehicle_rental_application)
 
 ## File Structure
 ```
