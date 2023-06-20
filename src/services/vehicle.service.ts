@@ -302,6 +302,7 @@ export async function getRecommendedVehicles(localUser: any) {
     const vehicles = await prisma.vehicle.findMany({
         where: {
             isVerified: true,
+            isBooked: false,
         },
         select: {
             id: true,
